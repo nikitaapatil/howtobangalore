@@ -50,8 +50,14 @@ const getEnhancedArticleContent = (id, title, excerpt) => {
   const featuredImage = FEATURED_IMAGES[id];
   
   if (formattedArticleMap[id]) {
+    // Clean markdown code blocks from content
+    const cleanContent = formattedArticleMap[id].content
+      .replace(/```html\n?/, '')
+      .replace(/\n?```$/, '')
+      .trim();
+    
     return {
-      content: formattedArticleMap[id].content,
+      content: cleanContent,
       readTime: formattedArticleMap[id].readTime,
       wordCount: formattedArticleMap[id].wordCount,
       featuredImage,
