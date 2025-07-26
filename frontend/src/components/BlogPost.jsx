@@ -4,7 +4,7 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { allPosts, categories } from '../data/comprehensive_mock';
+import { allPosts, categories } from '../data/enhanced_mock';
 
 const BlogPost = () => {
   const { postId } = useParams();
@@ -28,11 +28,20 @@ const BlogPost = () => {
     .filter(p => p.id !== post.id)
     .slice(0, 3);
 
-  // Mock article content - In a real implementation, this would come from a CMS or API
-  // const articleContent = `...` // Removed as we now use post.content directly
-
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Featured Image */}
+      {post.featuredImage && (
+        <div className="w-full h-96 bg-gray-200 overflow-hidden">
+          <img 
+            src={post.featuredImage} 
+            alt={post.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+      )}
+
       {/* Article Header */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Navigation */}
@@ -72,6 +81,11 @@ const BlogPost = () => {
               <Clock className="h-4 w-4 mr-2" />
               <span>{post.readTime}</span>
             </div>
+            {post.wordCount && (
+              <div className="flex items-center">
+                <span>{post.wordCount.toLocaleString()} words</span>
+              </div>
+            )}
             <div className="flex items-center space-x-3">
               <Button variant="outline" size="sm">
                 <Share2 className="h-4 w-4 mr-2" />
@@ -88,7 +102,7 @@ const BlogPost = () => {
         {/* Article Content */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
           <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900"
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:mb-4 prose-ul:mb-6 prose-ol:mb-6"
             dangerouslySetInnerHTML={{ __html: post.content }} 
           />
         </div>
@@ -127,6 +141,15 @@ const BlogPost = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {relatedPosts.map((relatedPost) => (
               <Card key={relatedPost.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                {relatedPost.featuredImage && (
+                  <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={relatedPost.featuredImage} 
+                      alt={relatedPost.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
                     {relatedPost.featured && (

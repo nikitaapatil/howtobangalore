@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowRight, Clock, Home as HomeIcon, Car, Zap, Users, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { categories } from '../data/comprehensive_mock';
+import { categories } from '../data/enhanced_mock';
 
 const CategoryPage = () => {
   const { categoryId, subcategoryId } = useParams();
@@ -157,6 +157,15 @@ const CategoryPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {postsToShow.map((post) => (
               <Card key={post.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                {post.featuredImage && (
+                  <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={post.featuredImage} 
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
                     {post.featured && (

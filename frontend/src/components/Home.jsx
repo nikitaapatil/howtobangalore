@@ -4,7 +4,7 @@ import { ArrowRight, Clock, Star, TrendingUp, Users, MapPin, Home as HomeIcon, C
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { featuredPosts, categories } from '../data/comprehensive_mock';
+import { featuredPosts, categories } from '../data/enhanced_mock';
 
 const Home = () => {
   return (
@@ -38,15 +38,15 @@ const Home = () => {
             <div className="mt-12 flex flex-wrap justify-center gap-8 text-gray-600">
               <div className="flex items-center">
                 <Users className="h-5 w-5 mr-2 text-orange-600" />
-                <span>100+ Comprehensive Guides</span>
+                <span>30+ Comprehensive Guides</span>
               </div>
               <div className="flex items-center">
                 <Star className="h-5 w-5 mr-2 text-orange-600" />
-                <span>Insider Knowledge</span>
+                <span>2000+ Words Each</span>
               </div>
               <div className="flex items-center">
                 <TrendingUp className="h-5 w-5 mr-2 text-orange-600" />
-                <span>Regularly Updated</span>
+                <span>SEO Optimized</span>
               </div>
             </div>
           </div>
@@ -66,6 +66,15 @@ const Home = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredPosts.slice(0, 6).map((post) => (
               <Card key={post.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                {post.featuredImage && (
+                  <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={post.featuredImage} 
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
                     <Badge variant="outline" className="text-orange-600 border-orange-200">
@@ -169,6 +178,41 @@ const Home = () => {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Trust Our Guides?</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Our content is comprehensive, well-researched, and based on real experiences of living in Bangalore.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-600 mb-2">30+</div>
+              <div className="text-lg font-medium text-gray-900 mb-2">Comprehensive Articles</div>
+              <p className="text-gray-600">Detailed guides covering every aspect of Bangalore life</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-600 mb-2">2000+</div>
+              <div className="text-lg font-medium text-gray-900 mb-2">Words Per Article</div>
+              <p className="text-gray-600">In-depth content with practical tips and insights</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-600 mb-2">5</div>
+              <div className="text-lg font-medium text-gray-900 mb-2">Main Categories</div>
+              <p className="text-gray-600">Organized approach to Bangalore living topics</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-600 mb-2">100%</div>
+              <div className="text-lg font-medium text-gray-900 mb-2">Practical Focus</div>
+              <p className="text-gray-600">Real-world advice you can implement immediately</p>
+            </div>
           </div>
         </div>
       </section>

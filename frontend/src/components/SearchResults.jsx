@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { searchPosts, categories } from '../data/comprehensive_mock';
+import { searchPosts, categories } from '../data/enhanced_mock';
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -132,9 +132,18 @@ const SearchResults = () => {
           )}
 
           {filteredResults.length > 0 ? (
-            <div className="space-y-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredResults.map((post) => (
-                <Card key={post.id} className="hover:shadow-lg transition-all duration-300">
+                <Card key={post.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  {post.featuredImage && (
+                    <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
+                      <img 
+                        src={post.featuredImage} 
+                        alt={post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
                       {post.featured && (
@@ -147,14 +156,14 @@ const SearchResults = () => {
                         {post.readTime}
                       </div>
                     </div>
-                    <CardTitle className="text-2xl leading-tight hover:text-orange-600 transition-colors">
+                    <CardTitle className="text-xl leading-tight hover:text-orange-600 transition-colors">
                       <Link to={`/post/${post.id}`}>
                         {highlightText(post.title, query)}
                       </Link>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-gray-600 mb-4 text-base">
+                    <CardDescription className="text-gray-600 mb-4">
                       {highlightText(post.excerpt, query)}
                     </CardDescription>
                     <div className="flex items-center justify-between">
@@ -163,7 +172,7 @@ const SearchResults = () => {
                         to={`/post/${post.id}`}
                         className="text-orange-600 hover:text-orange-700 font-medium flex items-center group"
                       >
-                        Read Full Article
+                        Read More
                         <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
