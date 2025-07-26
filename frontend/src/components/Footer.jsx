@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, ExternalLink, Heart } from 'lucide-react';
-import { categories } from '../data/enhanced_mock';
+import { categories } from '../data/updated_enhanced_mock';
 
 const Footer = () => {
   return (
