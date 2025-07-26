@@ -4,7 +4,12 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { allPosts, categories } from '../data/updated_enhanced_mock';
+// Try to import user articles first, fallback to enhanced mock
+import userArticles from '../data/user_articles.json';
+import { allPosts as oldAllPosts, categories } from '../data/updated_enhanced_mock';
+
+// Use user articles if available, otherwise fallback to old data
+const allPosts = userArticles && userArticles.length > 0 ? userArticles : oldAllPosts;
 import TableOfContents from './TableOfContents';
 
 const BlogPost = () => {
