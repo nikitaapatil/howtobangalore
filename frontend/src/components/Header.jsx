@@ -36,19 +36,22 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
             <div className="bg-orange-500 text-white p-2 rounded-lg">
-              <MapPin className="h-6 w-6" />
+              <MapPin className="h-5 w-5" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">How to Bangalore</h1>
-              <p className="text-xs text-gray-600 hidden sm:block">The Ultimate City Guide</p>
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-bold text-gray-900 leading-tight">How to Bangalore</h1>
+              <p className="text-xs text-gray-600 leading-tight">The Ultimate City Guide</p>
+            </div>
+            <div className="sm:hidden">
+              <h1 className="text-lg font-bold text-gray-900">How to Bangalore</h1>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+          <nav className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
+            <Link to="/" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
               Home
             </Link>
             
@@ -57,12 +60,12 @@ const Header = () => {
               return (
                 <div key={category.id} className="relative group">
                   <button
-                    className="flex items-center space-x-1 text-gray-700 hover:text-orange-600 font-medium transition-colors py-2"
+                    className="flex items-center space-x-1 text-gray-700 hover:text-orange-600 font-medium transition-colors py-2 whitespace-nowrap"
                     onMouseEnter={() => setActiveDropdown(category.id)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <IconComponent className="h-4 w-4" />
-                    <span>{category.name}</span>
+                    <span className="text-sm">{category.name}</span>
                     <ChevronDown className="h-3 w-3" />
                   </button>
                   
@@ -100,22 +103,22 @@ const Header = () => {
               );
             })}
             
-            <Link to="/about" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+            <Link to="/about" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
               About
             </Link>
           </nav>
 
           {/* Search and Mobile Menu */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 flex-shrink-0">
             {/* Search Form */}
             <form onSubmit={handleSearch} className="hidden md:flex items-center">
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder="Search articles..."
+                  placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64 pr-10"
+                  className="w-48 pr-10"
                 />
                 <button
                   type="submit"
@@ -131,7 +134,7 @@ const Header = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden"
+              className="lg:hidden p-2"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
