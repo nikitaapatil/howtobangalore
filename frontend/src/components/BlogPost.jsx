@@ -4,7 +4,7 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { allPosts, categories } from '../data/mock';
+import { allPosts, categories } from '../data/comprehensive_mock';
 
 const BlogPost = () => {
   const { postId } = useParams();
