@@ -381,7 +381,7 @@ async def generate_comprehensive_article(article_data, api_key):
         system_message="""You are an expert content writer specializing in practical, insider guides about living in Bangalore. 
         You have deep knowledge of the city's infrastructure, culture, costs, and daily life challenges. 
         Write comprehensive, detailed articles that provide real value to IT professionals and migrants living in Bangalore."""
-    ).with_model("gemini", "gemini-2.5-pro-preview-05-06").with_max_tokens(8192)
+    ).with_model("gemini", "gemini-1.5-flash").with_max_tokens(8192)
     
     prompt = f"""
     Write a comprehensive, deeply researched article of 2500-3000 words on the topic: "{article_data['title']}"
