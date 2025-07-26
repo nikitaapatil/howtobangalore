@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { searchPosts, categories } from '../data/mock';
+import { searchPosts, categories } from '../data/comprehensive_mock';
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
