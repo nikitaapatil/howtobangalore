@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, ChevronDown, Home, Car, Zap, Users, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { categories, searchPosts } from '../data/comprehensive_mock';
+import { categories, searchPosts } from '../data/enhanced_mock';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
