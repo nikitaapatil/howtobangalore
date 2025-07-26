@@ -4,7 +4,7 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { allPosts, categories } from '../data/enhanced_mock';
+import { allPosts, categories } from '../data/updated_enhanced_mock';
 import TableOfContents from './TableOfContents';
 
 const BlogPost = () => {
