@@ -4,7 +4,16 @@ import { ArrowRight, Clock, Star, TrendingUp, Users, MapPin, Home as HomeIcon, C
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { featuredPosts, categories } from '../data/updated_enhanced_mock';
+// Try to import user articles first, fallback to enhanced mock
+import userArticles from '../data/user_articles.json';
+import { featuredPosts as oldFeaturedPosts, categories as oldCategories } from '../data/updated_enhanced_mock';
+
+// Use user articles if available, otherwise fallback to old data
+const featuredPosts = userArticles && userArticles.length > 0 ? userArticles.filter(post => post.featured) : oldFeaturedPosts;
+const allPosts = userArticles && userArticles.length > 0 ? userArticles : oldFeaturedPosts;
+
+// For now, keep using old categories until we have proper category mapping
+const categories = oldCategories;
 
 const Home = () => {
   return (
