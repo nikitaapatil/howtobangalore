@@ -137,7 +137,10 @@ const BlogPost = () => {
 
         {/* Article Content */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
-          <div dangerouslySetInnerHTML={{ __html: articleContent }} />
+          <div 
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900"
+            dangerouslySetInnerHTML={{ __html: post.content }} 
+          />
         </div>
 
         {/* Article Footer */}
