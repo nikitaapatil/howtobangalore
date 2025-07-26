@@ -130,17 +130,38 @@ frontend:
         agent: "main"
         comment: "Successfully integrated user_articles.json and user_articles_mock.js data into frontend components. Articles are loading correctly with featured images, metadata, and table of contents."
 
+  - task: "Fix HTML formatting issue"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/data/user_articles.json, /app/process_user_articles.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported that the HTML formatting is completely off due to markdown code block wrappers in the content"
+      - working: true
+        agent: "main"
+        comment: "Fixed the HTML formatting issue by removing markdown code block wrappers (```html and ```) from all article content in user_articles.json and updated process_user_articles.py to prevent this issue in future processing"
+
   - task: "Article content display"
     implemented: true
     working: true
     file: "/app/frontend/src/components/BlogPost.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
         comment: "User-provided markdown content is properly rendered with HTML formatting, proper headings structure, and base64 encoded featured images"
+      - working: false
+        agent: "user" 
+        comment: "HTML formatting was not preserved due to markdown code block wrappers"
+      - working: true
+        agent: "main"
+        comment: "Fixed HTML formatting by removing markdown code block delimiters from content"
 
 metadata:
   created_by: "main_agent"
