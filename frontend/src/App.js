@@ -1,54 +1,38 @@
-import { useEffect } from "react";
+import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./components/Home";
+import CategoryPage from "./components/CategoryPage";
+import BlogPost from "./components/BlogPost";
+import SearchResults from "./components/SearchResults";
+import AboutPage from "./components/AboutPage";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App min-h-screen flex flex-col">
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
+        <Header />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/category/:categoryId" element={<CategoryPage />} />
+            <Route path="/category/:categoryId/:subcategoryId" element={<CategoryPage />} />
+            <Route path="/post/:postId" element={<BlogPost />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Contact Us</h1><p className="mt-4">Coming soon...</p></div>} />
+            <Route path="/privacy" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Privacy Policy</h1><p className="mt-4">Coming soon...</p></div>} />
+            <Route path="/terms" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Terms of Service</h1><p className="mt-4">Coming soon...</p></div>} />
+            <Route path="/disclaimer" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Disclaimer</h1><p className="mt-4">Coming soon...</p></div>} />
+            <Route path="/sitemap" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Sitemap</h1><p className="mt-4">Coming soon...</p></div>} />
+          </Routes>
+        </main>
+        <Footer />
+        <Toaster />
       </BrowserRouter>
     </div>
   );
 }
-
-export default App;
