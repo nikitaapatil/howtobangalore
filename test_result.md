@@ -180,3 +180,7 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Successfully completed the integration of user-provided markdown articles. The 5 initial articles from user_articles.json are now displaying correctly on the frontend with proper formatting, metadata, and featured images. The application has successfully transitioned from AI-generated content to human-curated articles."
+  - agent: "user"
+    message: "Reported that HTML formatting is completely off - the formatting is not preserved."
+  - agent: "main"  
+    message: "Fixed the HTML formatting issue by removing markdown code block wrappers from user_articles.json and updated the processing script to prevent this issue with future articles. The content should now display with proper HTML formatting."
