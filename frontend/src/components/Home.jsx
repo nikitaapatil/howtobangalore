@@ -4,7 +4,7 @@ import { ArrowRight, Clock, Star, TrendingUp, Users, MapPin, Home as HomeIcon, C
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { featuredPosts, categories } from '../data/mock';
+import { featuredPosts, categories } from '../data/comprehensive_mock';
 
 const Home = () => {
   return (
