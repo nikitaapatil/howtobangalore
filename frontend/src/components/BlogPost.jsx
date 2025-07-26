@@ -18,24 +18,12 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if we have formatted articles
-    import('../data/formatted_articles.json')
-      .then(formattedArticles => {
-        const formattedPost = formattedArticles.default?.find(p => p.id === parseInt(postId));
-        if (formattedPost) {
-          setPost({
-            ...formattedPost,
-            featuredImage: allPosts.find(p => p.id === parseInt(postId))?.featuredImage
-          });
-        } else {
-          setPost(allPosts.find(p => p.id === parseInt(postId)));
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setPost(allPosts.find(p => p.id === parseInt(postId)));
-        setLoading(false);
-      });
+    // Find the post in the data
+    const foundPost = allPosts.find(p => p.id === parseInt(postId));
+    if (foundPost) {
+      setPost(foundPost);
+    }
+    setLoading(false);
   }, [postId]);
   
   if (loading) {
