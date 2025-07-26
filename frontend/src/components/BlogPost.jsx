@@ -64,7 +64,7 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Featured Image - Remove dark overlay */}
+      {/* Featured Image */}
       {post.featuredImage && (
         <div className="w-full h-96 bg-gray-200 overflow-hidden relative">
           <img 
@@ -75,109 +75,119 @@ const BlogPost = () => {
         </div>
       )}
 
-      {/* Table of Contents */}
-      <TableOfContents content={post.content} />
-
-      {/* Article Header */}
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back Navigation */}
-        <div className="mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => window.history.back()}
-            className="text-gray-600 hover:text-orange-600"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Articles
-          </Button>
-        </div>
-
-        {/* Article Meta */}
-        <div className="mb-8">
-          {post.featured && (
-            <Badge variant="outline" className="text-orange-600 border-orange-200 mb-4">
-              Featured Article
-            </Badge>
-          )}
-          
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
-            {post.title}
-          </h1>
-          
-          <p className="text-xl text-gray-600 leading-relaxed mb-6">
-            {post.excerpt}
-          </p>
-          
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-2" />
-              <span>{post.publishDate}</span>
-            </div>
-            <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-2" />
-              <span>{post.readTime}</span>
-            </div>
-            {post.wordCount && (
-              <div className="flex items-center">
-                <span>{post.wordCount.toLocaleString()} words</span>
-              </div>
-            )}
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-              <Button variant="outline" size="sm">
-                <Bookmark className="h-4 w-4 mr-2" />
-                Save
+      {/* Article Content with Right Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Main Content */}
+          <div className="flex-1 max-w-4xl">
+            {/* Back Navigation */}
+            <div className="mb-8">
+              <Button 
+                variant="ghost" 
+                onClick={() => window.history.back()}
+                className="text-gray-600 hover:text-orange-600"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Articles
               </Button>
             </div>
-          </div>
-        </div>
 
-        {/* Article Content */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
-          <div 
-            className="prose prose-lg max-w-none 
-                       prose-headings:text-gray-900 
-                       prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-                       prose-li:text-gray-700 prose-li:mb-2
-                       prose-strong:text-gray-900 
-                       prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-bold
-                       prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-semibold
-                       prose-h4:text-lg prose-h4:mt-4 prose-h4:mb-2 prose-h4:font-semibold
-                       prose-ul:mb-6 prose-ol:mb-6 prose-ul:space-y-2 prose-ol:space-y-2
-                       prose-blockquote:border-l-4 prose-blockquote:border-orange-500 prose-blockquote:bg-orange-50 prose-blockquote:p-4"
-            dangerouslySetInnerHTML={{ __html: post.content }} 
-          />
-        </div>
-
-        {/* Article Footer */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
-          <div className="border-t pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Found this helpful?
-                </h3>
-                <p className="text-gray-600">
-                  Share it with others who might benefit from this guide.
-                </p>
+            {/* Article Meta */}
+            <div className="mb-8">
+              {post.featured && (
+                <Badge variant="outline" className="text-orange-600 border-orange-200 mb-4">
+                  Featured Article
+                </Badge>
+              )}
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
+                {post.title}
+              </h1>
+              
+              <p className="text-xl text-gray-600 leading-relaxed mb-6">
+                {post.excerpt}
+              </p>
+              
+              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span>{post.publishDate}</span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="h-4 w-4 mr-2" />
+                  <span>{post.readTime}</span>
+                </div>
+                {post.wordCount && (
+                  <div className="flex items-center">
+                    <span>{post.wordCount.toLocaleString()} words</span>
+                  </div>
+                )}
+                <div className="flex items-center space-x-3">
+                  <Button variant="outline" size="sm">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Bookmark className="h-4 w-4 mr-2" />
+                    Save
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center space-x-3 mt-4 md:mt-0">
-                <Button variant="outline">
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Article
-                </Button>
-                <Button>
-                  <Bookmark className="h-4 w-4 mr-2" />
-                  Save for Later
-                </Button>
+            </div>
+
+            {/* Article Content */}
+            <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
+              <div 
+                className="prose prose-lg max-w-none 
+                           prose-headings:text-gray-900 
+                           prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:max-w-none
+                           prose-li:text-gray-700 prose-li:mb-2
+                           prose-strong:text-gray-900 prose-strong:font-semibold
+                           prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-bold prose-h2:text-gray-900
+                           prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-semibold prose-h3:text-gray-900
+                           prose-h4:text-lg prose-h4:mt-4 prose-h4:mb-2 prose-h4:font-semibold prose-h4:text-gray-900
+                           prose-ul:mb-6 prose-ol:mb-6 prose-ul:space-y-2 prose-ol:space-y-2
+                           prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6
+                           prose-blockquote:border-l-4 prose-blockquote:border-orange-500 prose-blockquote:bg-orange-50 prose-blockquote:p-4 prose-blockquote:my-6
+                           prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
+                           prose-table:w-full prose-table:border-collapse prose-th:border prose-th:p-2 prose-td:border prose-td:p-2"
+                dangerouslySetInnerHTML={{ __html: post.content }} 
+              />
+            </div>
+
+            {/* Article Footer */}
+            <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
+              <div className="border-t pt-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Found this helpful?
+                    </h3>
+                    <p className="text-gray-600">
+                      Share it with others who might benefit from this guide.
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-3 mt-4 md:mt-0">
+                    <Button variant="outline">
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share Article
+                    </Button>
+                    <Button>
+                      <Bookmark className="h-4 w-4 mr-2" />
+                      Save for Later
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Right Sidebar - Table of Contents */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <TableOfContents content={post.content} />
+          </div>
         </div>
-      </article>
+      </div>
 
       {/* Related Articles */}
       <section className="bg-white py-12">

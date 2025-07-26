@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { List, ChevronRight } from 'lucide-react';
+import { List } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 const TableOfContents = ({ content }) => {
   const [headings, setHeadings] = useState([]);
   const [activeHeading, setActiveHeading] = useState('');
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     // Extract headings from content
@@ -32,12 +31,14 @@ const TableOfContents = ({ content }) => {
     // Add IDs to actual headings in the DOM
     setTimeout(() => {
       extractedHeadings.forEach((heading) => {
-        const actualHeading = document.querySelector(`h${heading.level}`);
-        if (actualHeading && actualHeading.textContent === heading.text) {
-          actualHeading.id = heading.id;
-        }
+        const actualHeadings = document.querySelectorAll(`h${heading.level}`);
+        actualHeadings.forEach(actualHeading => {
+          if (actualHeading.textContent === heading.text) {
+            actualHeading.id = heading.id;
+          }
+        });
       });
-    }, 100);
+    }, 500);
   }, [content]);
 
   useEffect(() => {
@@ -71,23 +72,15 @@ const TableOfContents = ({ content }) => {
   if (headings.length === 0) return null;
 
   return (
-    <div className={`fixed left-4 top-1/2 transform -translate-y-1/2 z-40 transition-transform duration-300 ${!isVisible ? '-translate-x-full' : ''}`}>
-      <Card className="w-64 max-h-96 overflow-y-auto shadow-lg border-2">
+    <div className="sticky top-24 w-64">
+      <Card className="shadow-sm border">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-gray-900 flex items-center">
-              <List className="h-4 w-4 mr-2" />
-              Table of Contents
-            </CardTitle>
-            <button
-              onClick={() => setIsVisible(!isVisible)}
-              className="text-gray-400 hover:text-gray-600 lg:hidden"
-            >
-              <ChevronRight className={`h-4 w-4 transition-transform ${isVisible ? 'rotate-180' : ''}`} />
-            </button>
-          </div>
+          <CardTitle className="text-sm font-semibold text-gray-900 flex items-center">
+            <List className="h-4 w-4 mr-2" />
+            Table of Contents
+          </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 max-h-96 overflow-y-auto">
           <nav className="space-y-1">
             {headings.map((heading) => (
               <button
@@ -111,16 +104,6 @@ const TableOfContents = ({ content }) => {
           </nav>
         </CardContent>
       </Card>
-      
-      {/* Toggle button for mobile */}
-      {!isVisible && (
-        <button
-          onClick={() => setIsVisible(true)}
-          className="absolute -right-12 top-1/2 transform -translate-y-1/2 bg-white border border-gray-200 rounded-r-lg p-2 shadow-md hover:bg-gray-50 lg:hidden"
-        >
-          <List className="h-4 w-4 text-gray-600" />
-        </button>
-      )}
     </div>
   );
 };
