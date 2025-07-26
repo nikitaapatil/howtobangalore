@@ -1,22 +1,21 @@
 <analysis>
-The previous AI engineer successfully initiated the How to Bangalore blog application, progressing from a basic frontend with mock data to a full-stack solution featuring AI-generated articles. Development involved significant UI/UX refinements, including header alignment, removal of image overlays, and implementation of a sticky Table of Contents. Challenges included API rate limits and precise UI adjustments. The current phase is crucial: transitioning from AI-generated content to user-provided markdown articles. The engineer has successfully downloaded and processed the first 5 user-provided markdown files using a new Python script (), converting them into JSON () and JS mock data (). The immediate task remaining is to integrate these newly processed articles into the frontend.
+The previous AI engineer successfully transitioned the How to Bangalore application from an AI-generated content model to one powered by user-provided markdown articles. Initial work involved processing 5 user markdown files into  and . The engineer then proceeded to integrate this new data into the React frontend, updating , , , and  to consume the flat data structure. Visual confirmation via screenshots showed the homepage and individual blog posts loading correctly, displaying featured images and the Table of Contents. However, the user identified a critical issue: the HTML formatting within the articles was not preserved. The engineer diagnosed this, finding that the processed HTML content was incorrectly wrapped in markdown code block syntax ( and ) within the JSON data, and was in the process of rectifying this.
 </analysis>
 
 <product_requirements>
-The user requested How to Bangalore, a full-stack blog application delivering comprehensive, deeply researched articles about Bangalore. Initial setup involved a React frontend, FastAPI backend, and MongoDB database. The frontend needed to be functional with mock data first, ensuring interactive elements worked. Articles were required to be 2000-3000 words, provide insider knowledge, be SEO-ready with H1-H3 markups and short paragraphs, and include locally stored featured images. UI/UX improvements included proper header alignment, no dark overlay on post pages, and a floating/sticky Table of Contents (TOC) moved to the right. The application transitioned from AI-generated content to user-provided high-quality markdown files, with an initial 5 files supplied out of an expected 50, alongside a requirement for local image storage.
+The How to Bangalore application is a full-stack blog delivering comprehensive, deeply researched articles about Bangalore. It features a React frontend, FastAPI backend, and MongoDB database. Articles must be 2000-3000 words, provide insider knowledge, be SEO-ready with H1-H3 markups and short paragraphs, and include locally stored featured images. UI/UX requirements include proper header alignment, no dark overlay on post pages, and a sticky Table of Contents (TOC) positioned on the right. The application has transitioned from AI-generated content to user-provided, human-curated markdown files, with the first 5 of an expected 50 files already processed and integrated into the frontend.
 </product_requirements>
 
 <key_technical_concepts>
 -   **Full-stack Architecture**: React (frontend), FastAPI (backend), MongoDB (database).
--   **Styling & UI**: Tailwind CSS, Shadcn UI, Lucide React.
--   **Content Generation**: Google Gemini 2.5 Pro (initial phase).
--   **Data Management**: Mock data files (, ) and local article processing.
--   **API Communication**:  for frontend,  with  prefix for backend.
--   **Database Interaction**:  for async MongoDB (though backend mostly health check so far).
+-   **Styling & UI**: Tailwind CSS, Shadcn UI.
+-   **Content Generation**: Google Gemini 2.5 Pro (initial phase),  Python library for user content processing.
+-   **Data Management**: Mock data files (, ).
+-   **API Communication**:  (frontend), FastAPI with  prefix (backend).
 -   **Environment**:  variables, backend                          RUNNING   pid 46, uptime 0:00:03
 code-server                      RUNNING   pid 48, uptime 0:00:03
 frontend                         STOPPING  
-mongodb                          RUNNING   pid 53, uptime 0:00:03
+mongodb                          RUNNING   pid 54, uptime 0:00:03
 supervisor> .
 </key_technical_concepts>
 
@@ -30,60 +29,48 @@ The application uses a standard full-stack React, FastAPI, MongoDB architecture.
 **Key Files and Their Importance:**
 
 -   :
-    -   **Summary**: The primary React entry point, responsible for routing , , , , and . Integrates  and .
-    -   **Changes Made**: Evolved to support comprehensive navigation and content display from updated mock data.
-
--    (and successors):
-    -   **Summary**: Served as the initial content source. Iteratively updated to hold AI-generated, then image-rich, and finally HTML-formatted article data (). Now,  and  are intended to replace these.
-    -   **Changes Made**: Significant evolution in content structure and richness; currently superseded by newly generated user article data.
-
+    -   **Summary**: The primary React entry point, handling routing for various pages like Home, Category, BlogPost, and SearchResults. It integrates  and .
+    -   **Changes Made**: Updated to manage routing and content display using the newly integrated  data.
+-    (and successors like ):
+    -   **Summary**: Previous sources for mock article content, initially AI-generated.
+    -   **Changes Made**: Now largely superseded by  and  for content.
 -   :
-    -   **Summary**: Manages site navigation, search, and header elements.
-    -   **Changes Made**: Refined for proper alignment, category navigation, and search functionality.
-
+    -   **Summary**: The main homepage component, displaying a list of articles.
+    -   **Changes Made**: Examined by the AI engineer to understand current data usage; implicitly updated to consume the new  data.
 -   :
-    -   **Summary**: Displays individual blog posts.
-    -   **Changes Made**: Updated to render comprehensive HTML content, featured images, removed a dark overlay, and integrated the  component.
-
+    -   **Summary**: Responsible for rendering individual blog posts, including content, featured images, and the Table of Contents.
+    -   **Changes Made**: Significantly updated to work with the flat  data structure, properly display base64 featured images, and integrate the  component. Further adjustments were made for data loading.
 -   :
-    -   **Summary**: Provides a floating/sticky table of contents for article navigation.
-    -   **Changes Made**: Implemented initially on the left, then moved to the right sidebar and made sticky, dynamically generating links from headings.
-
+    -   **Summary**: Displays articles filtered by category.
+    -   **Changes Made**: Modified to adapt to the new flat data structure of  instead of the old nested category structure.
 -   :
-    -   **Summary**: The FastAPI backend, defines API endpoints and connects to MongoDB.
-    -   **Changes Made**: Started with basic Hello World and a  endpoint. Most recent work has been frontend-focused, but this remains the core backend.
-
--    (and similar scripts):
-    -   **Summary**: Python scripts used to generate mock article content via Gemini API.
-    -   **Changes Made**: Iterated to produce SEO-optimized, markdown-formatted content for populating mock data files.
-
--    (NEW):
-    -   **Summary**: A newly created Python script designed to process user-provided markdown article files. It reads markdown, extracts content, converts it to a structured format (likely HTML for display), and generates JSON and JS files for frontend consumption.
-    -   **Changes Made**: Created to automate the ingestion of user-provided markdown, transforming it into  and .
-
+    -   **Summary**: Handles displaying search results based on user queries.
+    -   **Changes Made**: Updated to correctly search and display articles from the new flat  data structure.
+-   :
+    -   **Summary**: A new Python script created to automate the ingestion and processing of user-provided markdown articles ( files). It converts them into structured JSON and JavaScript mock data files for the frontend.
+    -   **Changes Made**: Created and used to generate  and  from the initial 5 markdown files.
 -    (NEW) and  (NEW):
-    -   **Summary**: New data files generated by . These files contain the structured content derived from the 5 user-provided markdown articles.
-    -   **Changes Made**: These files were created dynamically to hold the processed content, effectively becoming the new content source for the frontend.
+    -   **Summary**: These new files contain the structured content derived from the 5 user-provided markdown articles, including base64 encoded featured images and HTML content. They are now the primary content source for the frontend.
+    -   **Changes Made**: Dynamically generated by . The  field within these files was found to be incorrectly wrapped in markdown code blocks.
 </code_architecture>
 
 <pending_tasks>
--   Integrate the remaining user-provided markdown articles (45 more files are expected).
--   Ensure all images within the provided markdown articles are stored locally on the server (this was part of the processing but might require further handling for embedded images).
+-   Integrate the remaining 45 user-provided markdown articles into the application.
+-   Ensure that all images within the provided markdown articles are stored locally and properly handled for display.
+-   Fix the HTML formatting issue where content is wrapped in markdown code block wrappers in  and , preventing proper rendering on the frontend.
 </pending_tasks>
 
 <current_work>
-The immediate focus is on integrating user-provided, human-curated content into the How to Bangalore application, replacing the previously AI-generated articles. The AI engineer has just successfully completed the first major step of this transition.
+The immediate preceding work involved the successful processing and frontend integration of the first 5 user-provided markdown articles. The  script was used to convert these markdown files ( through ) into structured JSON () and JavaScript mock data ().
 
-Specifically:
-1.  The 5 initial markdown articles provided by the user ( through ) have been successfully retrieved and downloaded into the  directory.
-2.  A new Python script, , was created and utilized for content processing. This script, requiring the  Python library (which was installed), reads the raw markdown files.
-3.  The script then processes these markdown articles, converting their content into a structured format suitable for the frontend.
-4.  As a result of this processing, two new files were generated in the frontend's data directory:
-    *   : Contains the structured data for the 5 processed articles.
-    *   : Likely exports the same structured data as a JavaScript module.
-These new files ( and ) now hold the 5 user-provided articles, replacing the old mock data () as the intended content source. The previous AI engineer stated the Next step: Update the frontend to use the new data files.
+Following this, the frontend components were updated to consume this new data:
+-    was adjusted to handle the new data flow.
+-    was modified multiple times to correctly render the flat data structure, display base64 encoded featured images, and integrate the Table of Contents component.
+-    and  were updated to correctly filter and display articles based on the new flat article structure.
+
+After these integrations, initial screenshots confirmed the homepage and individual blog posts were loading and displaying content, featured images, and a functional Table of Contents. However, the user provided feedback that the HTML is not preserved - the formatting is completely off. Upon investigation, the previous engineer discovered that the HTML content within  was incorrectly wrapped with markdown code block delimiters ( at the start and  at the end). The trajectory ends with the engineer identifying this issue and stating the intention to fix it.
 </current_work>
 
 <optional_next_step>
-Update the frontend to use the  or  data files as the primary content source.
+Fix the HTML rendering issue by stripping the markdown code block wrappers from the content in  and .
 </optional_next_step>
