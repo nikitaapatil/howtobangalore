@@ -21,7 +21,16 @@ const BlogPost = () => {
     // Find the post in the data
     const foundPost = allPosts.find(p => p.id === parseInt(postId));
     if (foundPost) {
-      setPost(foundPost);
+      // Clean up content by removing markdown code block wrappers
+      let cleanContent = foundPost.content;
+      if (cleanContent.startsWith('```html\n')) {
+        cleanContent = cleanContent.replace(/^```html\n/, '').replace(/\n```$/, '');
+      }
+      
+      setPost({
+        ...foundPost,
+        content: cleanContent
+      });
     }
     setLoading(false);
   }, [postId]);
