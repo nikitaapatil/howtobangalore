@@ -1,15 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { allPosts, categories } from '../data/enhanced_mock';
+import TableOfContents from './TableOfContents';
 
 const BlogPost = () => {
   const { postId } = useParams();
-  const post = allPosts.find(p => p.id === parseInt(postId));
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if we have formatted articles
+    import('../data/formatted_articles.json')
+      .then(formattedArticles => {
+        const formattedPost = formattedArticles.default?.find(p => p.id === parseInt(postId));
+        if (formattedPost) {
+          setPost({
+            ...formattedPost,
+            featuredImage: allPosts.find(p => p.id === parseInt(postId))?.featuredImage
+          });
+        } else {
+          setPost(allPosts.find(p => p.id === parseInt(postId)));
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setPost(allPosts.find(p => p.id === parseInt(postId)));
+        setLoading(false);
+      });
+  }, [postId]);
   
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!post) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -30,17 +64,19 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Featured Image */}
+      {/* Featured Image - Remove dark overlay */}
       {post.featuredImage && (
-        <div className="w-full h-96 bg-gray-200 overflow-hidden">
+        <div className="w-full h-96 bg-gray-200 overflow-hidden relative">
           <img 
             src={post.featuredImage} 
             alt={post.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         </div>
       )}
+
+      {/* Table of Contents */}
+      <TableOfContents content={post.content} />
 
       {/* Article Header */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -102,7 +138,16 @@ const BlogPost = () => {
         {/* Article Content */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
           <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:mb-4 prose-ul:mb-6 prose-ol:mb-6"
+            className="prose prose-lg max-w-none 
+                       prose-headings:text-gray-900 
+                       prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                       prose-li:text-gray-700 prose-li:mb-2
+                       prose-strong:text-gray-900 
+                       prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-bold
+                       prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-semibold
+                       prose-h4:text-lg prose-h4:mt-4 prose-h4:mb-2 prose-h4:font-semibold
+                       prose-ul:mb-6 prose-ol:mb-6 prose-ul:space-y-2 prose-ol:space-y-2
+                       prose-blockquote:border-l-4 prose-blockquote:border-orange-500 prose-blockquote:bg-orange-50 prose-blockquote:p-4"
             dangerouslySetInnerHTML={{ __html: post.content }} 
           />
         </div>
