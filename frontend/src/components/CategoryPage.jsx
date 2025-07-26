@@ -3,7 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowRight, Clock, Home as HomeIcon, Car, Zap, Users, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { categories } from '../data/updated_enhanced_mock';
+// Try to import user articles first, fallback to enhanced mock
+import userArticles from '../data/user_articles.json';
+import { categories as oldCategories } from '../data/updated_enhanced_mock';
+
+// Use user articles if available, otherwise fallback to old data  
+const allPosts = userArticles && userArticles.length > 0 ? userArticles : null;
+const categories = oldCategories;
 
 const CategoryPage = () => {
   const { categoryId, subcategoryId } = useParams();
