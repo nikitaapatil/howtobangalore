@@ -29,57 +29,7 @@ const BlogPost = () => {
     .slice(0, 3);
 
   // Mock article content - In a real implementation, this would come from a CMS or API
-  const articleContent = `
-  <div class="prose max-w-none">
-    <p class="text-lg text-gray-700 leading-relaxed mb-6">
-      Welcome to this comprehensive guide on ${post.title.toLowerCase()}. This article is designed to provide you with practical, actionable advice based on real experiences of living in Bangalore.
-    </p>
-    
-    <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Understanding the Challenge</h2>
-    <p class="text-gray-700 leading-relaxed mb-6">
-      Bangalore presents unique challenges that require insider knowledge to navigate successfully. Whether you're a newcomer or a long-time resident, understanding the nuances of city life can make a significant difference in your daily experience.
-    </p>
-    
-    <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Practical Solutions</h2>
-    <p class="text-gray-700 leading-relaxed mb-4">
-      Based on extensive research and real-world experience, here are the key strategies that work:
-    </p>
-    <ul class="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-      <li>Research thoroughly before making any decisions</li>
-      <li>Connect with local communities and networks</li>
-      <li>Keep realistic expectations about costs and timelines</li>
-      <li>Always have backup plans for common issues</li>
-      <li>Leverage technology and online resources effectively</li>
-    </ul>
-    
-    <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Common Pitfalls to Avoid</h2>
-    <p class="text-gray-700 leading-relaxed mb-4">
-      Many newcomers fall into these traps. Here's how to avoid them:
-    </p>
-    <ol class="list-decimal pl-6 mb-6 text-gray-700 space-y-2">
-      <li>Don't underestimate the importance of location in your decisions</li>
-      <li>Avoid making financial commitments without proper verification</li>
-      <li>Don't ignore the local language and cultural aspects</li>
-      <li>Never compromise on safety and security measures</li>
-    </ol>
-    
-    <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Expert Tips</h2>
-    <div class="bg-orange-50 border-l-4 border-orange-500 p-6 mb-6">
-      <p class="text-gray-700 leading-relaxed">
-        <strong>Pro Tip:</strong> The key to succeeding in Bangalore is to balance ambition with pragmatism. Set realistic expectations while staying focused on your long-term goals.
-      </p>
-    </div>
-    
-    <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Next Steps</h2>
-    <p class="text-gray-700 leading-relaxed mb-6">
-      Now that you have this foundational knowledge, you can move forward with confidence. Remember that every situation is unique, so adapt these guidelines to your specific circumstances.
-    </p>
-    
-    <p class="text-gray-700 leading-relaxed">
-      This comprehensive approach will help you navigate the complexities of Bangalore life more effectively. For more detailed guides on specific topics, explore our other articles in this category.
-    </p>
-  </div>
-  `;
+  // const articleContent = `...` // Removed as we now use post.content directly
 
   return (
     <div className="min-h-screen bg-gray-50">
