@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowRight, Clock, Home as HomeIcon, Car, Zap, Users, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { categories } from '../data/mock';
+import { categories } from '../data/comprehensive_mock';
 
 const CategoryPage = () => {
   const { categoryId, subcategoryId } = useParams();
