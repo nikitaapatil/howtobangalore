@@ -166,7 +166,7 @@ def process_articles():
                 "category": category,
                 "subcategory": subcategory,
                 "excerpt": excerpt,
-                "content": f"```html\n{html_content}\n```",
+                "content": html_content,
                 "readTime": read_time,
                 "publishDate": f"2024-{i:02d}-15",
                 "featured": i <= 5,  # All 5 articles are featured
