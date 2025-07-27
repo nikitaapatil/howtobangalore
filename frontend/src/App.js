@@ -10,6 +10,7 @@ import SearchResults from "./components/SearchResults";
 import AboutPage from "./components/AboutPage";
 import AdminAuth from "./components/admin/AdminAuth";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import ArticleEditor from "./components/admin/ArticleEditor";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Toaster } from "./components/ui/toaster";
 
