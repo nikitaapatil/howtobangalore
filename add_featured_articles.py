@@ -715,36 +715,26 @@ featured_articles = [
 ]
 
 def create_article(article_data, token):
-    """Create a single article via API"""
+    """Create a single article via API using form data"""
     url = f"{BACKEND_URL}/api/admin/articles"
     
     headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {token}"
     }
     
-    article = {
-        "id": str(uuid.uuid4()),
+    # Prepare form data
+    form_data = {
         "title": article_data["title"],
-        "slug": article_data["slug"], 
         "content": article_data["content"],
-        "excerpt": article_data["excerpt"],
         "category": article_data["category"],
         "subcategory": article_data.get("subcategory", ""),
-        "read_time": f"{len(article_data['content'].split()) // 200 + 1} min read",
-        "word_count": len(article_data["content"].split()),
-        "featured_image": "https://koala.sh/api/image/v2-yhlis-h33jn.jpg?width=1216&height=832&dream",
-        "published": True,
-        "featured": article_data.get("featured", False),
-        "author": "Admin",
-        "created_at": datetime.now().isoformat(),
-        "updated_at": datetime.now().isoformat(),
-        "publish_date": datetime.now().strftime("%Y-%m-%d")
+        "featured": str(article_data.get("featured", False)).lower(),
+        "published": "true"
     }
     
     try:
-        response = requests.post(url, json=article, headers=headers, timeout=30)
-        if response.status_code == 201:
+        response = requests.post(url, data=form_data, headers=headers, timeout=30)
+        if response.status_code == 200:
             print(f"✅ Created: {article_data['title']}")
             return True
         else:
