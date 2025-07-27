@@ -50,64 +50,55 @@ const ArticleEditor = () => {
     lifestyle: ['shopping', 'healthcare', 'education', 'entertainment']
   };
 
-  // Quill editor configuration
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'font': [] }],
-        [{ 'align': [] }],
-        ['blockquote', 'code-block'],
-        ['link', 'image', 'video'],
-        ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
+  const categories = {
+    government: ['documentation', 'services'],
+    housing: ['finding-home', 'choosing-neighborhood', 'setup'],
+    transport: ['navigating-roads', 'public-transport', 'private-transport'],
+    utilities: ['electricity-water', 'internet-telecom', 'waste-management'],
+    lifestyle: ['shopping', 'healthcare', 'education', 'entertainment']
+  };
+
+  // Helper function to decode HTML entities
+  const decodeHtmlEntities = (text) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
+  // TinyMCE configuration
+  const editorConfig = {
+    height: 500,
+    menubar: true,
+    plugins: [
+      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons'
+    ],
+    toolbar: 'undo redo | blocks | ' +
+      'bold italic forecolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | image link | preview code | help',
+    content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
+    images_upload_handler: (blobInfo, success, failure) => {
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        success(reader.result);
+      };
+      reader.onerror = () => {
+        failure('Image upload failed');
+      };
+      reader.readAsDataURL(blobInfo.blob());
     },
-    clipboard: {
-      matchVisual: false,
-    }
-  }), []);
-
-  const formats = [
-    'header', 'font', 'size',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image', 'video',
-    'color', 'background',
-    'align', 'script',
-    'code-block'
-  ];
-
-  // Custom image handler for the editor
-  function imageHandler() {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-
-    input.onchange = async () => {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const quill = this.quill;
-          const range = quill.getSelection();
-          const base64Image = e.target.result;
-          quill.insertEmbed(range.index, 'image', base64Image);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    input.click();
-  }
+    setup: (editor) => {
+      editor.on('change', () => {
+        const content = editor.getContent();
+        setFormData(prev => ({ ...prev, content }));
+      });
+    },
+    branding: false,
+    promotion: false
+  };
 
   useEffect(() => {
     if (articleId) {
