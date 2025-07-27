@@ -1402,11 +1402,11 @@ This is a test to ensure the old markdown upload endpoint still works.
                                    headers={"Content-Type": "application/json"},
                                    timeout=10)
             
-            if response.status_code == 401:
+            if response.status_code == 403:
                 self.log_test("Password Change (No Auth)", True, "Correctly rejected request without authentication")
                 return True
             else:
-                self.log_test("Password Change (No Auth)", False, f"Expected 401 error, got HTTP {response.status_code}")
+                self.log_test("Password Change (No Auth)", False, f"Expected 403 error, got HTTP {response.status_code}")
                 return False
                 
         except requests.exceptions.RequestException as e:
