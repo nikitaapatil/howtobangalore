@@ -401,24 +401,48 @@ async def clear_all_articles(current_user: AdminUser = Depends(get_current_user)
     result = await db.articles.delete_many({})
     return {"message": f"Deleted {result.deleted_count} articles"}
 
-@api_router.post("/admin/articles/upload-markdown")
-async def upload_markdown_file(
+@api_router.post("/admin/articles/upload-file")
+async def upload_file(
     file: UploadFile = File(...),
     category: str = Form(...),
     subcategory: str = Form(...),
     featured: bool = Form(False),
     current_user: AdminUser = Depends(get_current_user)
 ):
-    """Upload a markdown file and create an article."""
-    if not file.filename.endswith('.md'):
-        raise HTTPException(status_code=400, detail="File must be a markdown (.md) file")
+    """Upload a markdown or HTML file and create an article."""
+    if not (file.filename.endswith('.md') or file.filename.endswith('.html')):
+        raise HTTPException(status_code=400, detail="File must be a markdown (.md) or HTML (.html) file")
     
     content = await file.read()
-    markdown_content = content.decode('utf-8')
+    file_content = content.decode('utf-8')
     
-    # Extract title from first H1 or use filename
-    title_match = re.search(r'^#\s+(.+)$', markdown_content, re.MULTILINE)
-    title = title_match.group(1) if title_match else file.filename.replace('.md', '').replace('_', ' ').title()
+    # Determine file type and process accordingly
+    is_html = file.filename.endswith('.html')
+    
+    if is_html:
+        # For HTML files, extract title from <title> tag or <h1> tag
+        title_match = re.search(r'<title[^>]*>([^<]+)</title>', file_content, re.IGNORECASE)
+        if not title_match:
+            title_match = re.search(r'<h1[^>]*>([^<]+)</h1>', file_content, re.IGNORECASE)
+        
+        title = title_match.group(1).strip() if title_match else file.filename.replace('.html', '').replace('_', ' ').title()
+        
+        # For HTML files, use content as-is (no markdown conversion needed)
+        html_content = file_content
+        featured_image = None
+        
+        # Extract featured image from HTML if present
+        img_pattern = r'<img[^>]+src=["\']([^"\']+)["\'][^>]*>'
+        img_match = re.search(img_pattern, html_content)
+        if img_match:
+            featured_image = img_match.group(1)
+    else:
+        # For markdown files, use existing processing
+        title_match = re.search(r'^#\s+(.+)$', file_content, re.MULTILINE)
+        title = title_match.group(1) if title_match else file.filename.replace('.md', '').replace('_', ' ').title()
+        
+        # Process markdown content
+        html_content, featured_image = process_markdown_to_html(file_content)
     
     # Generate slug
     slug = generate_slug(title)
@@ -428,19 +452,16 @@ async def upload_markdown_file(
     if existing_article:
         slug = f"{slug}-{int(datetime.utcnow().timestamp())}"
     
-    # Process markdown content
-    html_content, featured_image = process_markdown_to_html(markdown_content)
-    
     # Create article
     article = Article(
         title=title,
         slug=slug,
         content=html_content,
-        excerpt=extract_excerpt(markdown_content),
+        excerpt=extract_excerpt(file_content if not is_html else html_content),
         category=category,
         subcategory=subcategory,
-        read_time=calculate_read_time(markdown_content),
-        word_count=len(markdown_content.split()),
+        read_time=calculate_read_time(file_content if not is_html else html_content),
+        word_count=len((file_content if not is_html else html_content).split()),
         featured_image=featured_image,
         featured=featured,
         published=True,
