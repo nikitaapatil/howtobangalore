@@ -42,6 +42,11 @@ const BlogPost = () => {
           const foundPost = articles.find(p => p.id === identifier || p.id === parseInt(identifier));
           if (foundPost) {
             setPost(foundPost);
+            // Set related posts from same category
+            const related = articles
+              .filter(p => p.id !== foundPost.id && p.category === foundPost.category)
+              .slice(0, 3);
+            setRelatedPosts(related);
             setLoading(false);
             return;
           }
@@ -54,6 +59,16 @@ const BlogPost = () => {
       if (response.ok) {
         const data = await response.json();
         setPost(data);
+        
+        // Fetch related posts from same category
+        const allArticlesResponse = await fetch(`${API_BASE_URL}/api/articles`);
+        if (allArticlesResponse.ok) {
+          const allArticles = await allArticlesResponse.json();
+          const related = allArticles
+            .filter(p => p.id !== data.id && p.category === data.category)
+            .slice(0, 3);
+          setRelatedPosts(related);
+        }
       } else if (response.status === 404) {
         setError('Article not found');
       } else {
