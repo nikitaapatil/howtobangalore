@@ -1114,7 +1114,7 @@ This is a test to ensure the old markdown upload endpoint still works.
                     if data['token_type'] == 'bearer' and data['user_info']['username'] == 'nikitaapatil':
                         # Store the real admin token for other tests
                         self.real_admin_token = data['access_token']
-                        self.log_test("Existing Admin Authentication", True, "Successfully authenticated with existing admin credentials")
+                        self.log_test("Existing Admin Authentication", True, "Successfully authenticated with existing admin credentials nikitaapatil/testing123")
                         return True
                     else:
                         self.log_test("Existing Admin Authentication", False, "Invalid token type or username in response")
