@@ -106,11 +106,11 @@ const Header = () => {
                 Transport
               </Link>
               <Link
-                to="/category/work"
+                to="/category/utilities"
                 className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Work
+                Utilities
               </Link>
               <Link
                 to="/category/lifestyle"
