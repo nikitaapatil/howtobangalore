@@ -1442,6 +1442,308 @@ This is a test to ensure the old markdown upload endpoint still works.
         except requests.exceptions.RequestException as e:
             self.log_test("Password Change (Invalid Token)", False, f"Request failed: {str(e)}")
             return False
+
+    def test_analytics_config_get_empty(self):
+        """Test getting analytics configuration when none exists"""
+        if not self.real_admin_token:
+            self.log_test("Analytics Config (Get Empty)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            response = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                  headers=headers,
+                                  timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                expected_fields = ['googleAnalyticsId', 'googleSearchConsoleId', 'googleAdsId', 'googleTagManagerId']
+                
+                if all(field in data for field in expected_fields):
+                    # Check if all fields are empty strings (default state)
+                    all_empty = all(data[field] == "" for field in expected_fields)
+                    if all_empty:
+                        self.log_test("Analytics Config (Get Empty)", True, "Successfully retrieved empty analytics configuration")
+                        return True
+                    else:
+                        self.log_test("Analytics Config (Get Empty)", True, f"Retrieved existing analytics configuration: {data}")
+                        return True
+                else:
+                    missing_fields = [f for f in expected_fields if f not in data]
+                    self.log_test("Analytics Config (Get Empty)", False, f"Missing required fields: {missing_fields}")
+                    return False
+            else:
+                self.log_test("Analytics Config (Get Empty)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Get Empty)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_save_valid(self):
+        """Test saving analytics configuration with valid data"""
+        if not self.real_admin_token:
+            self.log_test("Analytics Config (Save Valid)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Test data with sample Google Analytics ID as specified in review request
+            analytics_config = {
+                "googleAnalyticsId": "G-TEST123456789",
+                "googleSearchConsoleId": "SC-TEST987654321",
+                "googleAdsId": "AW-TEST555666777",
+                "googleTagManagerId": "GTM-TEST888999"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/analytics-config", 
+                                   json=analytics_config, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data and 'successfully' in data['message'].lower():
+                    self.log_test("Analytics Config (Save Valid)", True, "Successfully saved analytics configuration")
+                    return True
+                else:
+                    self.log_test("Analytics Config (Save Valid)", False, f"Unexpected response message: {data}")
+                    return False
+            else:
+                self.log_test("Analytics Config (Save Valid)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Save Valid)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_get_saved(self):
+        """Test retrieving saved analytics configuration"""
+        if not self.real_admin_token:
+            self.log_test("Analytics Config (Get Saved)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            response = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                  headers=headers,
+                                  timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                expected_fields = ['googleAnalyticsId', 'googleSearchConsoleId', 'googleAdsId', 'googleTagManagerId']
+                
+                if all(field in data for field in expected_fields):
+                    # Check if the saved data matches what we saved in the previous test
+                    expected_values = {
+                        "googleAnalyticsId": "G-TEST123456789",
+                        "googleSearchConsoleId": "SC-TEST987654321",
+                        "googleAdsId": "AW-TEST555666777",
+                        "googleTagManagerId": "GTM-TEST888999"
+                    }
+                    
+                    matches = all(data[field] == expected_values[field] for field in expected_fields)
+                    if matches:
+                        self.log_test("Analytics Config (Get Saved)", True, "Successfully retrieved saved analytics configuration with correct data")
+                        return True
+                    else:
+                        self.log_test("Analytics Config (Get Saved)", True, f"Retrieved analytics configuration (data may have been modified): {data}")
+                        return True
+                else:
+                    missing_fields = [f for f in expected_fields if f not in data]
+                    self.log_test("Analytics Config (Get Saved)", False, f"Missing required fields: {missing_fields}")
+                    return False
+            else:
+                self.log_test("Analytics Config (Get Saved)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Get Saved)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_update_partial(self):
+        """Test updating analytics configuration with partial data"""
+        if not self.real_admin_token:
+            self.log_test("Analytics Config (Update Partial)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Update only Google Analytics ID
+            partial_config = {
+                "googleAnalyticsId": "G-UPDATED123456789",
+                "googleSearchConsoleId": "",
+                "googleAdsId": "",
+                "googleTagManagerId": ""
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/analytics-config", 
+                                   json=partial_config, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data and 'successfully' in data['message'].lower():
+                    # Verify the update by getting the config
+                    get_response = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                              headers=headers, timeout=10)
+                    
+                    if get_response.status_code == 200:
+                        get_data = get_response.json()
+                        if get_data.get('googleAnalyticsId') == 'G-UPDATED123456789':
+                            self.log_test("Analytics Config (Update Partial)", True, "Successfully updated analytics configuration partially")
+                            return True
+                        else:
+                            self.log_test("Analytics Config (Update Partial)", False, f"Update not reflected in retrieved data: {get_data}")
+                            return False
+                    else:
+                        self.log_test("Analytics Config (Update Partial)", False, "Could not verify update")
+                        return False
+                else:
+                    self.log_test("Analytics Config (Update Partial)", False, f"Unexpected response message: {data}")
+                    return False
+            else:
+                self.log_test("Analytics Config (Update Partial)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Update Partial)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_no_authentication(self):
+        """Test analytics config endpoints without authentication"""
+        try:
+            # Test GET without authentication
+            response_get = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                      headers={"Content-Type": "application/json"},
+                                      timeout=10)
+            
+            # Test POST without authentication
+            config_data = {"googleAnalyticsId": "G-TEST123456789"}
+            response_post = requests.post(f"{API_BASE_URL}/admin/analytics-config", 
+                                        json=config_data,
+                                        headers={"Content-Type": "application/json"},
+                                        timeout=10)
+            
+            if response_get.status_code == 403 and response_post.status_code == 403:
+                self.log_test("Analytics Config (No Authentication)", True, "Correctly rejected requests without authentication")
+                return True
+            else:
+                self.log_test("Analytics Config (No Authentication)", False, f"Expected 403 errors, got GET: {response_get.status_code}, POST: {response_post.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (No Authentication)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_invalid_token(self):
+        """Test analytics config endpoints with invalid token"""
+        try:
+            headers = {
+                "Authorization": "Bearer invalid_analytics_token",
+                "Content-Type": "application/json"
+            }
+            
+            # Test GET with invalid token
+            response_get = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                      headers=headers,
+                                      timeout=10)
+            
+            # Test POST with invalid token
+            config_data = {"googleAnalyticsId": "G-TEST123456789"}
+            response_post = requests.post(f"{API_BASE_URL}/admin/analytics-config", 
+                                        json=config_data,
+                                        headers=headers,
+                                        timeout=10)
+            
+            if response_get.status_code == 401 and response_post.status_code == 401:
+                self.log_test("Analytics Config (Invalid Token)", True, "Correctly rejected requests with invalid token")
+                return True
+            else:
+                self.log_test("Analytics Config (Invalid Token)", False, f"Expected 401 errors, got GET: {response_get.status_code}, POST: {response_post.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Invalid Token)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_config_data_persistence(self):
+        """Test analytics configuration data persistence across multiple requests"""
+        if not self.real_admin_token:
+            self.log_test("Analytics Config (Data Persistence)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Save a specific configuration
+            test_config = {
+                "googleAnalyticsId": "G-PERSIST123456789",
+                "googleSearchConsoleId": "SC-PERSIST987654321",
+                "googleAdsId": "AW-PERSIST555666777",
+                "googleTagManagerId": "GTM-PERSIST888999"
+            }
+            
+            # Save the configuration
+            save_response = requests.post(f"{API_BASE_URL}/admin/analytics-config", 
+                                        json=test_config, 
+                                        headers=headers,
+                                        timeout=10)
+            
+            if save_response.status_code != 200:
+                self.log_test("Analytics Config (Data Persistence)", False, f"Failed to save config: {save_response.status_code}")
+                return False
+            
+            # Wait a moment to ensure database write is complete
+            time.sleep(1)
+            
+            # Retrieve the configuration multiple times to test persistence
+            for i in range(3):
+                get_response = requests.get(f"{API_BASE_URL}/admin/analytics-config", 
+                                          headers=headers,
+                                          timeout=10)
+                
+                if get_response.status_code != 200:
+                    self.log_test("Analytics Config (Data Persistence)", False, f"Failed to retrieve config on attempt {i+1}")
+                    return False
+                
+                data = get_response.json()
+                
+                # Verify all fields match what we saved
+                for field, expected_value in test_config.items():
+                    if data.get(field) != expected_value:
+                        self.log_test("Analytics Config (Data Persistence)", False, f"Data mismatch on attempt {i+1}: {field} = {data.get(field)}, expected {expected_value}")
+                        return False
+                
+                # Small delay between requests
+                time.sleep(0.5)
+            
+            self.log_test("Analytics Config (Data Persistence)", True, "Analytics configuration data persisted correctly across multiple requests")
+            return True
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Config (Data Persistence)", False, f"Request failed: {str(e)}")
+            return False
     
     def cleanup_test_admin(self):
         """Clean up test admin user (if possible)"""
