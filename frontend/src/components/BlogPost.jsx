@@ -159,40 +159,6 @@ const BlogPost = () => {
                   Featured Article
                 </Badge>
               )}
-              
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
-                {displayPost.title}
-              </h1>
-              
-              <p className="text-xl text-gray-600 leading-relaxed mb-6">
-                {displayPost.excerpt}
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
-                <div className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  <span>{displayPost.publishDate}</span>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span>{displayPost.readTime}</span>
-                </div>
-                {displayPost.wordCount && (
-                  <div className="flex items-center">
-                    <span>{displayPost.wordCount.toLocaleString()} words</span>
-                  </div>
-                )}
-                <div className="flex items-center space-x-3">
-                  <Button variant="outline" size="sm">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Bookmark className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
-                </div>
-              </div>
             </div>
 
             {/* Article Content */}
