@@ -122,6 +122,22 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
+def clean_title_text(title_text: str) -> str:
+    """Clean and decode HTML entities from title text."""
+    if not title_text:
+        return ""
+    
+    # Decode HTML entities (like &#x26; for &)
+    decoded_title = html.unescape(title_text)
+    
+    # Remove any remaining HTML tags
+    clean_title = re.sub(r'<[^>]+>', '', decoded_title)
+    
+    # Clean up extra whitespace
+    clean_title = re.sub(r'\s+', ' ', clean_title).strip()
+    
+    return clean_title
+
 def generate_slug(title: str) -> str:
     """Generate URL-friendly slug from article title with main keywords."""
     # Convert to lowercase and replace spaces with hyphens
