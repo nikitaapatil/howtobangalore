@@ -33,6 +33,10 @@ const AdminAuth = () => {
             setIsFirstUser(false);
             setIsLogin(true);
           }
+        } else if (response.status === 403) {
+          // Admin registration is restricted - account likely exists
+          setIsFirstUser(false);
+          setIsLogin(true);
         } else {
           setIsFirstUser(true);
           setIsLogin(false);
