@@ -129,6 +129,18 @@ backend:
         agent: "testing"
         comment: "COMPREHENSIVE ARTICLE MANAGEMENT TESTING COMPLETED SUCCESSFULLY: All CRUD operations working perfectly. Article creation (POST /api/admin/articles) successfully creates articles with automatic slug generation, HTML conversion from markdown, excerpt extraction, read time calculation, and word count. Article retrieval by slug (GET /api/articles/{slug}) works correctly for public access. Published articles list (GET /api/articles) returns all published articles. Admin article management (GET /api/admin/articles) provides admin access to all articles. Article updates (PUT /api/admin/articles/{id}) successfully modify article properties. Article deletion (DELETE /api/admin/articles/{id}) removes articles properly. All 7 article management tests passed with 100% success rate."
 
+  - task: "HTML File Upload and Processing System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "COMPREHENSIVE HTML FILE UPLOAD TESTING COMPLETED SUCCESSFULLY: The new unified file upload endpoint (/api/admin/articles/upload-file) works perfectly for both HTML and markdown files. HTML FILE UPLOAD VERIFIED: ✅ HTML file validation accepts .html files correctly ✅ Title extraction from HTML <title> tags works perfectly (extracts 'Test HTML Article Upload for Bangalore Blog' from test file) ✅ HTML content stored as-is without markdown conversion ✅ Slug generation from HTML titles works properly (generates 'test-html-article-upload-bangalore-[timestamp]') ✅ HTML content processing: excerpt extraction strips HTML tags correctly, word count calculation works (60 words), read time calculation works (1 min read). DUAL FORMAT SUPPORT VERIFIED: ✅ Both .md and .html files accepted and processed correctly ✅ File type validation properly rejects unsupported formats (.txt files rejected with proper error) ✅ Different processing paths work correctly - HTML preserved as-is, Markdown converted to HTML ✅ Markdown files still work correctly with new endpoint. All 5 HTML upload functionality tests passed with 100% success rate."
+
   - task: "File Upload and Markdown Processing"
     implemented: true
     working: true
@@ -140,6 +152,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "MARKDOWN FILE UPLOAD SYSTEM FULLY OPERATIONAL: Markdown file upload endpoint (POST /api/admin/articles/upload-markdown) successfully processes .md files, extracts titles from H1 headers, converts markdown to HTML, generates SEO-friendly slugs, calculates reading time and word count, and creates complete articles. Featured image handling works with base64 encoding. Slug generation creates URL-friendly slugs by removing stop words and using main keywords. All file processing functionality verified and working correctly."
+      - working: true
+        agent: "testing"
+        comment: "UPDATED: Markdown processing now works through the new unified endpoint (/api/admin/articles/upload-file). The old endpoint has been migrated to the new system. Markdown files are still processed correctly with HTML conversion, title extraction from H1 headers, and all other functionality intact. Migration to unified endpoint completed successfully."
 
   - task: "Database Operations and MongoDB Integration"
     implemented: true
