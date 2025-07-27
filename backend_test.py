@@ -1202,6 +1202,9 @@ This is a test to ensure the old markdown upload endpoint still works.
         print("AUTHENTICATION SYSTEM TESTING")
         print("="*50)
         
+        # Test existing admin authentication first
+        self.test_existing_admin_authentication()
+        
         # Test authentication system
         registration_success = self.test_admin_registration()
         if not registration_success:
