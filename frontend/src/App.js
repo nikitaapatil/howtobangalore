@@ -204,7 +204,11 @@ function AppContent() {
             path="/admin/*" 
             element={
               <ProtectedRoute>
-                <AdminDashboard />
+                <Routes>
+                  <Route path="/" element={<AdminDashboard />} />
+                  <Route path="/articles/edit/:articleId" element={<ArticleEditor />} />
+                  <Route path="/articles/new" element={<ArticleEditor />} />
+                </Routes>
               </ProtectedRoute>
             } 
           />
