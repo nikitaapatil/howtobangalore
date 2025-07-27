@@ -115,43 +115,50 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-50 to-amber-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-20 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-40 left-40 w-80 h-80 bg-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              How to <span className="text-orange-600">Bangalore</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in-up">
+              How to <span className="text-orange-600 animate-pulse">Bangalore</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto animate-fade-in-up animation-delay-300">
               Your Pragmatic Guide to Thriving in India's Silicon Valley
             </p>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-600">
               Navigate the Bangalore Paradox with insider knowledge, practical solutions, and honest advice from someone who's been there.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-900">
+              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
                 <Link to="/category/housing" className="flex items-center">
                   Start Your Journey
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 animate-bounce-right" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" className="px-8 py-3">
+              <Button variant="outline" size="lg" className="px-8 py-3 border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white transform hover:scale-105 transition-all duration-300">
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
             
-            <div className="mt-12 flex flex-wrap justify-center gap-8 text-gray-600">
-              <div className="flex items-center">
-                <Users className="h-5 w-5 mr-2 text-orange-600" />
-                <span>{allPosts.length}+ Comprehensive Guides</span>
+            <div className="mt-12 flex flex-wrap justify-center gap-8 text-gray-600 animate-fade-in-up animation-delay-1200">
+              <div className="flex items-center group">
+                <Users className="h-5 w-5 mr-2 text-orange-600 group-hover:animate-pulse" />
+                <span className="group-hover:text-orange-600 transition-colors">{allPosts.length}+ Comprehensive Guides</span>
               </div>
-              <div className="flex items-center">
-                <Star className="h-5 w-5 mr-2 text-orange-600" />
-                <span>2000+ Words Each</span>
+              <div className="flex items-center group">
+                <TrendingUp className="h-5 w-5 mr-2 text-orange-600 group-hover:animate-pulse" />
+                <span className="group-hover:text-orange-600 transition-colors">Expert Insights</span>
               </div>
-              <div className="flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2 text-orange-600" />
-                <span>SEO Optimized</span>
+              <div className="flex items-center group">
+                <MapPin className="h-5 w-5 mr-2 text-orange-600 group-hover:animate-pulse" />
+                <span className="group-hover:text-orange-600 transition-colors">Local Knowledge</span>
               </div>
             </div>
           </div>
