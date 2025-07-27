@@ -1881,6 +1881,15 @@ This is a test to ensure the old markdown upload endpoint still works.
         self.test_slug_generation()
 
         print("\n" + "="*50)
+        print("GOOGLE SEARCH CONSOLE FEATURES TESTING")
+        print("="*50)
+        
+        # Test Google Search Console features
+        self.test_sitemap_xml_generation()
+        self.test_robots_txt_generation()
+        self.test_analytics_public_endpoint()
+        
+        print("\n" + "="*50)
         print("CONTACT FORM FUNCTIONALITY TESTING")
         print("="*50)
         
