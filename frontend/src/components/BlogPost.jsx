@@ -237,7 +237,7 @@ const BlogPost = () => {
 
           {/* Right Sidebar - Table of Contents */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <TableOfContents content={post.content} />
+            <TableOfContents content={displayPost.content} />
           </div>
         </div>
       </div>
