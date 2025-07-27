@@ -106,10 +106,14 @@ const BlogPost = () => {
     );
   }
 
-  // Find related posts from the same category
-  const relatedPosts = allPosts
-    .filter(p => p.id !== post.id)
-    .slice(0, 3);
+  // Update article meta field names to match API response
+  const displayPost = post ? {
+    ...post,
+    featuredImage: post.featured_image,
+    readTime: post.read_time,
+    publishDate: post.publish_date,
+    wordCount: post.word_count
+  } : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
