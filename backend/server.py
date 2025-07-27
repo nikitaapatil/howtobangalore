@@ -330,6 +330,12 @@ async def reset_admin_password():
     
     return {"message": f"Password reset successfully. New password: {new_password}"}
 
+@api_router.get("/admin/debug-users")
+async def debug_admin_users():
+    """Debug endpoint to check admin users"""
+    users = await db.admin_users.find({}, {"hashed_password": 0}).to_list(10)
+    return {"users": users}
+
 @api_router.get("/admin/me")
 async def get_current_admin(current_user: AdminUser = Depends(get_current_user)):
     return {
