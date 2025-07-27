@@ -493,8 +493,8 @@ With proper planning and research, finding suitable accommodation in Bangalore b
                 required_fields = ['id', 'title', 'slug', 'content', 'category']
                 
                 if all(field in article_data for field in required_fields):
-                    # Verify title extraction from HTML
-                    expected_title = "Complete Guide to Internet and Broadband in Bangalore"
+                    # Verify title extraction from HTML (should extract from <title> tag first)
+                    expected_title = "Test HTML Article Upload for Bangalore Blog"
                     if article_data['title'] == expected_title:
                         # Verify HTML content is stored as-is
                         if '<h1>' in article_data['content'] and '<h2>' in article_data['content']:
