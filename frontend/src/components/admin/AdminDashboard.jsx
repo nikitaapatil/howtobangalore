@@ -492,7 +492,7 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="mt-3">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Upload Markdown Article</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Upload Article File</h3>
           
           {/* File Drop Area */}
           <div
@@ -508,6 +508,9 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
               <div>
                 <FileText className="mx-auto h-8 w-8 text-green-500 mb-2" />
                 <p className="text-sm text-gray-700">{file.name}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {file.name.endsWith('.html') ? 'HTML File' : 'Markdown File'}
+                </p>
                 <button
                   onClick={() => setFile(null)}
                   className="text-sm text-red-600 hover:text-red-500 mt-1"
@@ -518,16 +521,19 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
             ) : (
               <div>
                 <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-600">Drop your .md file here or</p>
+                <p className="text-sm text-gray-600">Drop your .md or .html file here or</p>
                 <label className="cursor-pointer text-orange-600 hover:text-orange-500">
                   <span>browse files</span>
                   <input
                     type="file"
                     className="hidden"
-                    accept=".md"
+                    accept=".md,.html"
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Supported formats: Markdown (.md) and HTML (.html)
+                </p>
               </div>
             )}
           </div>
