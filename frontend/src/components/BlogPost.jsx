@@ -251,7 +251,7 @@ const BlogPost = () => {
                         <span className="font-medium">{displayPost.wordCount.toLocaleString()} words</span>
                       </div>
                     )}
-                    <div className="flex items-center space-x-3 ml-auto relative">
+                    <div className="flex items-center space-x-3 ml-auto relative share-menu-container">
                       <Button 
                         variant="outline" 
                         size="sm" 
