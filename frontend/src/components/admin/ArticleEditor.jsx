@@ -378,6 +378,7 @@ const ArticleEditor = () => {
                     <div className="border border-gray-300 rounded-md">
                       <Editor
                         ref={editorRef}
+                        apiKey="hptwgm0493ocvg4usqjo1pipdcon7ji3b97pvo28dea59zur"
                         value={formData.content}
                         onEditorChange={handleEditorChange}
                         init={{
@@ -386,9 +387,11 @@ const ArticleEditor = () => {
                           plugins: [
                             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'powerpaste',
+                            'formatpainter', 'pagebreak', 'nonbreaking', 'template', 'importcss',
+                            'visualchars', 'codesample', 'emoticons'
                           ],
-                          toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image link | preview code | help',
+                          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor | removeformat | pagebreak | charmap emoticons | fullscreen preview save | insertfile image media template link anchor codesample | ltr rtl',
                           content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
                           images_upload_handler: (blobInfo, success, failure) => {
                             const reader = new FileReader();
@@ -400,8 +403,31 @@ const ArticleEditor = () => {
                             };
                             reader.readAsDataURL(blobInfo.blob());
                           },
-                          branding: false,
-                          promotion: false
+                          automatic_uploads: true,
+                          file_picker_types: 'image',
+                          file_picker_callback: (callback, value, meta) => {
+                            if (meta.filetype === 'image') {
+                              const input = document.createElement('input');
+                              input.setAttribute('type', 'file');
+                              input.setAttribute('accept', 'image/*');
+                              input.onchange = function() {
+                                const file = this.files[0];
+                                const reader = new FileReader();
+                                reader.onload = function() {
+                                  callback(reader.result, {
+                                    alt: file.name
+                                  });
+                                };
+                                reader.readAsDataURL(file);
+                              };
+                              input.click();
+                            }
+                          },
+                          templates: [
+                            { title: 'Bangalore Guide Template', description: 'Standard article template', content: '<h1>Article Title</h1><p>Introduction paragraph...</p><h2>Section 1</h2><p>Content...</p><h2>Section 2</h2><p>Content...</p><h2>Conclusion</h2><p>Summary...</p>' }
+                          ],
+                          powerpaste_word_import: 'clean',
+                          powerpaste_html_import: 'clean'
                         }}
                       />
                     </div>
