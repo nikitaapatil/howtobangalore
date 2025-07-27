@@ -1,29 +1,36 @@
 <analysis>
-The previous AI engineer successfully transformed the How to Bangalore application from static, AI-generated content to a dynamic, user-managed platform. Initially, the engineer fixed a critical HTML formatting issue within user-provided markdown articles, ensuring proper display. Subsequently, a comprehensive admin system was built from scratch, featuring JWT-based authentication, an article upload utility for both Markdown and HTML files, and in-browser rich text editing. Key enhancements included making subcategories optional, ensuring all external links open in new tabs, restricting admin registration to a specific email, and significantly improving article readability through extensive UI/UX styling. The final task addressed a ReactQuill compatibility error by migrating to TinyMCE for the rich text editor, and integrating a user-provided TinyMCE API key.
+The previous AI engineer successfully evolved the How to Bangalore application from static content to a dynamic, user-managed platform. Key initial efforts involved fixing critical HTML formatting issues, then building a comprehensive admin system with JWT authentication, file upload (Markdown/HTML), and an in-browser rich text editor (migrating from ReactQuill to TinyMCE). The engineer ensured subcategories were optional, links opened in new tabs, and restricted admin registration. Subsequent work focused on UI/UX, including resolving title duplication in blog posts (removing redundancy and converting content H1s to H2s), restyling the Table of Contents for seamless integration, and adding functional share buttons (replacing save buttons). A hero section redesign with animations, mobile responsiveness across the application, and initial attempts at populating featured articles were also completed. The immediate preceding work involved removing auto-generated articles and setting existing ones as featured, alongside simplifying the header design.
 </analysis>
 
 <product_requirements>
-The How to Bangalore application is a full-stack blog designed to provide comprehensive articles about Bangalore. Key requirements include articles being 2000-3000 words, offering insider knowledge, being SEO-ready with proper HTML structure (H1-H3, short paragraphs), and including locally stored featured images. UI/UX demands proper header alignment, no dark overlay on post pages, and a sticky Table of Contents on the right. The application transitioned from AI-generated to user-provided markdown content.
-The previous engineer processed the first 5 of 50 expected user markdown files, converting them into structured JSON and JS mock data. Subsequent user requests included:
-1. An admin utility for uploading markdown and HTML articles, with SEO-friendly URLs.
-2. Ability to clear all current articles.
-3. A secure admin login facility (not for normal users), with credentials set from the UI, not hardcoded.
-4. Subcategories should be optional.
-5. All links in articles should open in new tabs.
-6. Admin registration should be restricted to .
-7. An in-browser rich text editor to edit articles (change text, add/remove photos, edit paragraphs) from the UI.
-8. Fix garbage text like  in article titles.
-9. Ensure the article edit button opens in a new tab.
-10. Integrate a TinyMCE API key.
+The How to Bangalore application aims to be a comprehensive blog for Bangalore insights, featuring 2000-3000 word, SEO-ready articles with proper HTML structure and local images. UI/UX requirements include proper header alignment, no dark overlays on posts, and a sticky Table of Contents.
+
+The application has evolved to support user-provided content via an admin utility. Explicit requests and implemented features include:
+1.  Admin utility for uploading Markdown/HTML articles with SEO-friendly URLs.
+2.  Ability to clear articles (via delete functionality).
+3.  Secure admin login (JWT-based, restricted to ).
+4.  Optional subcategories.
+5.  All links in articles open in new tabs.
+6.  In-browser rich text editing (TinyMCE integration).
+7.  Fix for HTML entity encoding (e.g., ) in titles.
+8.  Article edit button opens in a new tab.
+9.  TinyMCE API key integration for premium features.
+10. Title duplication fix (ensure title appears only once).
+11. Seamless integration of the right sidebar/Table of Contents.
+12. Functional Share buttons (WhatsApp, Twitter, LinkedIn, Email, SMS, Copy Link); removal of Save button.
+13. Removal of 2000+ Words Each SEO Optimized text from homepage hero.
+14. Redesigned, vibrant hero section with animations.
+15. Full mobile responsiveness across the application.
+16. Fix for cramped header design.
+17. Updated page title and custom favicon.
+18. Removed newly added featured articles and set existing ones as featured.
 </product_requirements>
 
 <key_technical_concepts>
 -   **Full-stack Architecture**: React (frontend), FastAPI (backend), MongoDB (database).
--   **Styling & UI**: Tailwind CSS, Shadcn UI, custom CSS for typography.
+-   **Styling & UI**: Tailwind CSS, Shadcn UI, custom CSS, HTML entity unescaping.
 -   **Authentication**: JWT (PyJWT), bcrypt for password hashing.
--   **Content Processing**: Python  library,  for HTML entities.
--   **Rich Text Editor**: TinyMCE (replaced ReactQuill).
--   **Data Management**: API-driven content, removal of static mock data.
+-   **Content Processing**: Python  library, TinyMCE rich text editor, Web Share API, localStorage.
 </key_technical_concepts>
 
 <code_architecture>
@@ -35,70 +42,35 @@ The application uses a standard full-stack React, FastAPI, MongoDB architecture.
 
 **Key Files and Their Importance:**
 
--   :
-    -   **Summary**: The FastAPI backend entry point. Initially handled basic API routes.
-    -   **Changes Made**: Significantly refactored to include JWT-based admin authentication, user registration (restricted to specific email), article management (CRUD operations for Markdown/HTML), and file upload endpoints.  function was added to decode HTML entities in titles. Logic for making subcategory optional, clearing articles, and handling HTML/Markdown uploads was integrated.
--   :
-    -   **Summary**: The primary React entry point, handling routing.
-    -   **Changes Made**: Updated to integrate  for authentication, added routes for  and , and conditionally rendered  and  based on admin status. Removed reliance on static .
--   :
-    -   **Summary**: Displays a list of articles on the homepage.
-    -   **Changes Made**: Modified to fetch articles from the backend API instead of local mock data. Includes  for clean titles and  for links.
--   :
-    -   **Summary**: Renders individual blog posts.
-    -   **Changes Made**: Updated to fetch articles via API using slugs, decode HTML entities in titles, ensure base64 featured images display, and integrate . All internal links now open in new tabs. Extensive styling improvements applied for readability.
--   :
-    -   **Summary**: Displays articles filtered by category.
-    -   **Changes Made**: Modified to fetch articles from the API, remove dependency on static , decode HTML entities, and ensure all links open in new tabs.
--   :
-    -   **Summary**: Handles displaying search results.
-    -   **Changes Made**: Updated to fetch search results from the API, remove dependency on static , decode HTML entities, and ensure all links open in new tabs. Involved significant refactoring due to previous errors.
--   :
-    -   **Summary**: Script for processing user markdown files into structured data.
-    -   **Changes Made**: Modified to prevent HTML content from being wrapped in markdown code block delimiters, as this was causing rendering issues. Primarily used in the initial phase and now superseded by the backend API.
--    (NEW):
-    -   **Summary**: Handles admin login and registration forms.
-    -   **Changes Made**: Created to manage JWT authentication, integrate with backend API, display setup/login forms, and enforce email restriction for registration.
--    (NEW):
-    -   **Summary**: The main admin interface for article management.
-    -   **Changes Made**: Created to display article statistics, list articles, provide upload functionality, and integrate Edit buttons that link to the . It also utilizes the  function for titles, and edit links open in new tabs.
--    (NEW):
-    -   **Summary**: Provides an in-browser rich text editor for articles.
-    -   **Changes Made**: Initially implemented with , but later completely rewritten to use  (TinyMCE) due to compatibility issues. It supports WYSIWYG editing, image uploads (base64), text formatting, live preview, and integrates with backend update endpoints.
--    (NEW):
-    -   **Summary**: React Context for managing authentication state across the frontend.
-    -   **Changes Made**: Created to store and provide authentication tokens and user information, allowing protected routes and conditional rendering.
--    (OLD) and  (OLD):
-    -   **Summary**: Previously the primary content sources generated from user markdown.
-    -   **Changes Made**: These files were removed as the application transitioned to fetching data dynamically from the backend API.
--    (OLD):
-    -   **Summary**: A temporary script created to clean the initial  data.
-    -   **Changes Made**: Created and used once to fix the code block wrapper issue, then removed.
+-   : FastAPI backend, managing admin authentication (JWT), article CRUD, file uploads, and HTML entity decoding for titles. Recently, it was used for deleting and updating article features.
+-   : React entry point and router. Integrates , and defines admin routes.
+-   : Displays articles and handles the hero section. Recently modified to remove 2000+ Words Each text and redesigned with animations for a vibrant hero section, and for mobile responsiveness (category grids).
+-   : Renders individual articles. Received extensive updates to fix title duplication (removed meta title, converted content H1 to H2: ), implement Share functionality (Web Share API/clipboard fallback), remove Save buttons, and improve mobile responsiveness for content layout and typography (e.g., ).
+-   : Displays the article's table of contents. Modified to integrate seamlessly with the page by removing  components and applying direct styling (, , , ,  for mobile).
+-   : Application header. Recently restructured to be simpler, with categories to be handled differently. Was previously updated for cramped spacing and mobile responsiveness.
+-   : The in-browser rich text editor. Rewritten from  to  and integrated with a user-provided TinyMCE API key for premium features.
+-   : Main HTML file for frontend. Updated to set page title (How to Bangalore - The Ultimate City Guide), add a custom favicon (🏙️), include SEO meta tags (description, Open Graph, Twitter card), and remove Made with Emergent branding.
+-   : Global CSS file. Custom animations for the hero section were added here (e.g., ).
+-   : A temporary script created to add 10 featured articles, then deleted. It demonstrated the API's form data expectation for file uploads and used JWT authentication.
 </code_architecture>
 
 <pending_tasks>
--   Integrate the remaining 45 user-provided markdown articles into the application. (This is now handled by the admin upload feature, but implies bulk upload might still be a future consideration or a task for the user via the UI).
--   Ensure that all images within the provided markdown articles are stored locally and properly handled for display. (Partially addressed by base64 image support in editor, but initial markdown processing might need review for bulk images.)
+-   Continue setting existing articles as featured (after removing the ones added by script).
+-   Update empty pages: create a simple Contact Us form (sends emails to  via backend, no contact details on frontend).
+-   Build all legal pages.
 </pending_tasks>
 
 <current_work>
-The immediate preceding work focused on addressing two critical user feedback points and integrating a premium editor feature:
-1.  **Fixing HTML Entity Encoding**: The user reported garbage text like  in article titles. The AI engineer implemented a  function in the backend () using  to properly decode HTML entities and applied it to various article creation/update endpoints. On the frontend, a  helper function was created and integrated into all relevant components (, , , , ) to ensure titles are displayed correctly.
-2.  **Edit Button Opens in New Tab**: The user requested that the article edit buttons in the admin dashboard open in a new tab. This was implemented by adding  attributes to the edit links in .
-3.  **TinyMCE API Key Integration**: The user provided a TinyMCE API key (). The engineer successfully integrated this key into the  component to enable premium features and remove branding.
+The immediate current work involves addressing the user's feedback on the content and design. The AI engineer has just completed the following:
 
-Before these fixes, the system had already undergone significant development:
--   Initial HTML formatting issues in  were resolved.
--   A complete admin system with JWT authentication was implemented, restricting registration to .
--   Articles are now fetched from the backend API, replacing static mock data.
--   An in-browser rich text editor (TinyMCE) was successfully integrated for article editing (replacing a problematic ReactQuill setup).
--   HTML and Markdown file uploads are supported via the admin dashboard.
--   Subcategories in the upload form are now optional.
--   All article links across the public-facing site open in new tabs.
--   Significant improvements were made to article readability, typography, and Table of Contents styling.
-The current state is that all these features and fixes have been implemented and tested (backend and frontend), and the TinyMCE API key has just been integrated. The last action was restarting the frontend service after adding the TinyMCE API key.
+1.  **Revising Featured Articles**: The user explicitly requested to use *already uploaded* articles for the featured section and to *remove any newly added articles*.
+    *   The AI engineer identified and deleted 10 articles that were previously added via a script ().
+    *   It then started the process of setting existing articles as featured by updating them via the backend API's  endpoint. At the end of the trajectory, only one article was explicitly shown as being set to featured.
+
+2.  **Redesigning the Header**: The user expressed dissatisfaction with the previous header and asked for a simpler design, with categories shown in another way.
+    *   The AI engineer is currently refactoring the  component. It has removed the previous complex header structure (including dropdowns) and is implementing a cleaner, simpler design. The immediate next step would be to fully implement the new approach for categories.
 </current_work>
 
 <optional_next_step>
-Restart the frontend to apply the TinyMCE API key changes and then verify the editor functionality.
+Complete the redesign of the header to simplify category display and mark remaining existing articles as featured.
 </optional_next_step>
