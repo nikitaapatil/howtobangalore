@@ -249,7 +249,7 @@ const Home = () => {
                       </div>
                     </div>
                     <CardTitle className="text-xl leading-tight hover:text-orange-600 transition-colors">
-                      <Link to={`/${post.slug}`}>
+                      <Link to={`/${post.slug}`} target="_blank" rel="noopener noreferrer">
                         {post.title}
                       </Link>
                     </CardTitle>
