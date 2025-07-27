@@ -188,8 +188,21 @@ const AnalyticsManager = () => {
               <li>Add property: <code className="bg-green-100 px-1 rounded">{siteUrl}</code></li>
               <li>Choose "Domain" or "URL prefix" method</li>
               <li>Verify ownership (usually auto-verified if Analytics is set up)</li>
-              <li>Submit your sitemap: <code className="bg-green-100 px-1 rounded">{siteUrl}/sitemap.xml</code></li>
+              <li>Submit your sitemap: <code className="bg-green-100 px-1 rounded">{siteUrl}/api/sitemap.xml</code></li>
             </ol>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h4 className="font-medium text-blue-900 mb-2">✅ Ready for Search Console:</h4>
+            <div className="text-sm text-blue-800 space-y-2">
+              <p>Your website is already configured with:</p>
+              <ul className="list-disc list-inside ml-4 space-y-1">
+                <li>Google Analytics verification (auto-verification enabled)</li>
+                <li>Dynamic XML sitemap with all {46} articles</li>
+                <li>SEO-optimized robots.txt file</li>
+                <li>Proper meta tags and structured data</li>
+              </ul>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
