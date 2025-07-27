@@ -229,7 +229,7 @@ const BlogPost = () => {
                            prose-tr:even:bg-gray-50 prose-tr:hover:bg-gray-100
                            prose-a:text-orange-600 prose-a:font-medium prose-a:no-underline hover:prose-a:text-orange-700 hover:prose-a:underline
                            prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-img:my-8"
-                  dangerouslySetInnerHTML={{ __html: displayPost.content }} 
+                  dangerouslySetInnerHTML={{ __html: displayPost.content.replace(/<h1>/g, '<h2>').replace(/<\/h1>/g, '</h2>') }} 
                 />
 
                 {/* Article Footer */}
