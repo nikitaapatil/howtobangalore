@@ -18,13 +18,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Helper function to decode HTML entities
-  const decodeHtmlEntities = (text) => {
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
-  };
-
   useEffect(() => {
     fetchArticles();
   }, []);
