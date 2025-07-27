@@ -310,6 +310,26 @@ async def login_admin(login_data: AdminUserLogin):
         }
     }
 
+@api_router.post("/admin/reset-password")
+async def reset_admin_password():
+    """Temporary endpoint for testing - resets admin password to 'testing123'"""
+    # Find existing admin
+    existing_admin = await db.admin_users.find_one({"email": "nikitaapatil@gmail.com"})
+    if not existing_admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    
+    # Hash new password
+    new_password = "testing123"
+    hashed_password = get_password_hash(new_password)
+    
+    # Update password
+    await db.admin_users.update_one(
+        {"email": "nikitaapatil@gmail.com"},
+        {"$set": {"hashed_password": hashed_password}}
+    )
+    
+    return {"message": f"Password reset successfully. New password: {new_password}"}
+
 @api_router.get("/admin/me")
 async def get_current_admin(current_user: AdminUser = Depends(get_current_user)):
     return {
