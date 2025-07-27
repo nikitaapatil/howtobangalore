@@ -351,19 +351,6 @@ const BlogPost = () => {
                         <Share2 className="h-4 w-4 mr-2" />
                         Share Article
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className={`hover:border-orange-200 ${
-                          isBookmarked 
-                            ? 'bg-orange-50 text-orange-700 border-orange-200' 
-                            : 'hover:bg-orange-50'
-                        }`}
-                        onClick={handleBookmark}
-                      >
-                        <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
-                        {isBookmarked ? 'Bookmarked' : 'Bookmark'}
-                      </Button>
                     </div>
                   </div>
                 </footer>
