@@ -109,20 +109,20 @@ const Header = () => {
           </nav>
 
           {/* Search and Mobile Menu */}
-          <div className="flex items-center space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* Search Form */}
             <form onSubmit={handleSearch} className="hidden md:flex items-center">
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search guides..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-48 pr-10"
+                  className="w-56 pr-10 h-10"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
                 >
                   <Search className="h-4 w-4" />
                 </button>
