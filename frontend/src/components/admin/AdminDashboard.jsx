@@ -383,6 +383,8 @@ const AdminDashboard = () => {
                         className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                       >
                         <Edit className="h-4 w-4" />
+                      </a>
+                        <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => deleteArticle(article.id)}
