@@ -189,7 +189,7 @@ const BlogPost = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Featured Image */}
       {displayPost.featuredImage && (
-        <div className="w-full h-96 bg-gray-200 overflow-hidden relative">
+        <div className="w-full h-64 sm:h-80 lg:h-96 bg-gray-200 overflow-hidden relative">
           <img 
             src={displayPost.featuredImage} 
             alt={displayPost.title}
@@ -199,10 +199,10 @@ const BlogPost = () => {
       )}
 
       {/* Article Content with Right Sidebar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
-        <div className="flex gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 bg-gray-50 min-h-screen">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Main Content */}
-          <div className="flex-1 max-w-4xl">
+          <div className="flex-1 max-w-none lg:max-w-4xl">
             {/* Back Navigation */}
             <div className="mb-6">
               <Button 
