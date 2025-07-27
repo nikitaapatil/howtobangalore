@@ -23,60 +23,53 @@ const BlogPost = () => {
     return textarea.value;
   };
 
-  // Share functionality
-  const handleShare = async () => {
-    const shareData = {
-      title: displayPost?.title || 'How to Bangalore Article',
-      text: displayPost?.excerpt || 'Check out this helpful guide about Bangalore!',
-      url: window.location.href
-    };
-
-    try {
-      if (navigator.share && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: copy URL to clipboard
-        await navigator.clipboard.writeText(window.location.href);
-        setShowShareSuccess(true);
-        setTimeout(() => setShowShareSuccess(false), 2000);
-      }
-    } catch (error) {
-      // If all else fails, fallback to copying URL
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        setShowShareSuccess(true);
-        setTimeout(() => setShowShareSuccess(false), 2000);
-      } catch (clipboardError) {
-        console.error('Share failed:', error);
-        alert('Unable to share. You can copy the URL from your browser address bar.');
-      }
-    }
+  // Share functionality with social media options
+  const handleShare = () => {
+    setShowShareMenu(!showShareMenu);
   };
 
-  // Bookmark functionality
-  const handleBookmark = () => {
-    const bookmarkKey = `bookmark_${identifier}`;
-    const bookmarks = JSON.parse(localStorage.getItem('how_to_bangalore_bookmarks') || '[]');
-    
-    if (isBookmarked) {
-      // Remove bookmark
-      const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== identifier);
-      localStorage.setItem('how_to_bangalore_bookmarks', JSON.stringify(updatedBookmarks));
-      setIsBookmarked(false);
-    } else {
-      // Add bookmark
-      const bookmarkData = {
-        id: identifier,
-        title: displayPost?.title,
-        slug: displayPost?.slug,
-        excerpt: displayPost?.excerpt,
-        publishDate: displayPost?.publishDate,
-        url: window.location.href,
-        bookmarkedAt: new Date().toISOString()
-      };
-      bookmarks.push(bookmarkData);
-      localStorage.setItem('how_to_bangalore_bookmarks', JSON.stringify(bookmarks));
-      setIsBookmarked(true);
+  const shareToWhatsApp = () => {
+    const text = `${displayPost?.title}\n${displayPost?.excerpt}\n${window.location.href}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+    setShowShareMenu(false);
+  };
+
+  const shareToEmail = () => {
+    const subject = encodeURIComponent(displayPost?.title || 'Check out this article');
+    const body = encodeURIComponent(`I thought you might find this article interesting:\n\n${displayPost?.title}\n\n${displayPost?.excerpt}\n\nRead more: ${window.location.href}`);
+    const emailUrl = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = emailUrl;
+    setShowShareMenu(false);
+  };
+
+  const shareToSMS = () => {
+    const text = `Check out this article: ${displayPost?.title} - ${window.location.href}`;
+    const smsUrl = `sms:?body=${encodeURIComponent(text)}`;
+    window.location.href = smsUrl;
+    setShowShareMenu(false);
+  };
+
+  const shareToTwitter = () => {
+    const text = `${displayPost?.title} - ${displayPost?.excerpt}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
+    window.open(twitterUrl, '_blank');
+    setShowShareMenu(false);
+  };
+
+  const shareToLinkedIn = () => {
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+    window.open(linkedinUrl, '_blank');
+    setShowShareMenu(false);
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+      setShowShareMenu(false);
+    } catch (error) {
+      console.error('Failed to copy:', error);
     }
   };
 
