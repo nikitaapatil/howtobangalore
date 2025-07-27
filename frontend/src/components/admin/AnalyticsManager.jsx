@@ -222,14 +222,23 @@ const AnalyticsManager = () => {
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
               <h5 className="font-medium text-gray-900 mb-2">Sitemap URL</h5>
               <div className="flex items-center space-x-2">
-                <code className="text-sm bg-gray-100 px-2 py-1 rounded">{siteUrl}/sitemap.xml</code>
+                <code className="text-sm bg-gray-100 px-2 py-1 rounded">{siteUrl}/api/sitemap.xml</code>
                 <button
-                  onClick={() => copyToClipboard(`${siteUrl}/sitemap.xml`)}
+                  onClick={() => copyToClipboard(`${siteUrl}/api/sitemap.xml`)}
                   className="p-1 hover:bg-gray-200 rounded"
                 >
                   <Copy className="h-4 w-4" />
                 </button>
+                <a
+                  href={`${API_BASE_URL}/api/sitemap.xml`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1 hover:bg-gray-200 rounded"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
               </div>
+              <p className="text-xs text-gray-600 mt-1">Dynamic sitemap with all articles</p>
             </div>
           </div>
         </CardContent>
