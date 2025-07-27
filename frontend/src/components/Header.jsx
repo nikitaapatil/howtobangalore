@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, ChevronDown, Home, Car, Zap, Users, MapPin } from 'lucide-react';
+import { Search, Menu, X, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { categories, searchPosts } from '../data/updated_enhanced_mock';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
