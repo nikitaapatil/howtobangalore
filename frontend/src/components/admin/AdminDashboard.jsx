@@ -351,7 +351,7 @@ const AdminDashboard = () => {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center">
                           <p className="text-sm font-medium text-gray-900 truncate">
-                            {article.title}
+                            {decodeHtmlEntities(article.title)}
                           </p>
                           {article.featured && (
                             <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
