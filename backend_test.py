@@ -1921,12 +1921,14 @@ This is a test to ensure the old markdown upload endpoint still works.
         article_tests = [t for t in self.test_results if 'article' in t['test'].lower() or 'markdown' in t['test'].lower()]
         system_tests = [t for t in self.test_results if 'database' in t['test'].lower() or 'slug' in t['test'].lower() or 'health' in t['test'].lower()]
         contact_tests = [t for t in self.test_results if 'contact' in t['test'].lower()]
+        analytics_tests = [t for t in self.test_results if 'analytics' in t['test'].lower()]
         
         print(f"\nTest Categories:")
         print(f"  Authentication & Security: {len([t for t in auth_tests if t['success']])}/{len(auth_tests)} passed")
         print(f"  Article Management: {len([t for t in article_tests if t['success']])}/{len(article_tests)} passed")
         print(f"  System/Database: {len([t for t in system_tests if t['success']])}/{len(system_tests)} passed")
         print(f"  Contact Form: {len([t for t in contact_tests if t['success']])}/{len(contact_tests)} passed")
+        print(f"  Analytics Configuration: {len([t for t in analytics_tests if t['success']])}/{len(analytics_tests)} passed")
         
         return failed_tests == 0
 
