@@ -981,6 +981,13 @@ With multiple transport options, getting around Bangalore is manageable with pro
         self.test_html_content_processing()
         self.test_dual_format_support()
         
+        print("\n" + "="*50)
+        print("BACKWARD COMPATIBILITY TESTING")
+        print("="*50)
+        
+        # Test backward compatibility
+        self.test_backward_compatibility_old_endpoint()
+        
         # Test article deletion
         self.test_article_deletion()
         
