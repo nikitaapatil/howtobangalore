@@ -68,26 +68,25 @@ const SearchResults = () => {
   const categories = [...new Set(articles.map(article => article.category))].filter(Boolean);
   
   const [searchQuery, setSearchQuery] = useState(query);
-  const [results, setResults] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
-
-  useEffect(() => {
-    const searchResults = searchPosts(query);
-    setResults(searchResults);
-    
-    // Apply category filter
-    if (categoryFilter === 'all') {
-      setFilteredResults(searchResults);
-    } else {
-      const category = categories.find(cat => cat.id === categoryFilter);
-      if (category) {
-        const categoryPostIds = category.subcategories.flatMap(sub => sub.posts.map(post => post.id));
-        setFilteredResults(searchResults.filter(post => categoryPostIds.includes(post.id)));
-      }
-    }
-  }, [query, categoryFilter]);
 
   const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchParams({ q: searchQuery, category: categoryFilter });
+  };
+
+  const handleCategoryChange = (value) => {
+    setSearchParams({ q: query, category: value });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  return (
     e.preventDefault();
     if (searchQuery.trim()) {
       setSearchParams({ q: searchQuery.trim(), category: categoryFilter });
