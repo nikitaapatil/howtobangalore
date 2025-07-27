@@ -128,23 +128,22 @@ const BlogPost = () => {
         </div>
       )}
 
-      {/* Main Content */}
-      <section className="py-8 bg-gray-50 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-8">
-            {/* Article Content */}
-            <div className="flex-1 min-w-0">
-              {/* Back Navigation */}
-              <div className="mb-6">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => window.history.back()}
-                  className="text-gray-600 hover:text-orange-600 hover:bg-orange-50 px-0"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Articles
-                </Button>
-              </div>
+      {/* Article Content with Right Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen">
+        <div className="flex gap-8">
+          {/* Main Content */}
+          <div className="flex-1 max-w-4xl">
+            {/* Back Navigation */}
+            <div className="mb-6">
+              <Button 
+                variant="ghost" 
+                onClick={() => window.history.back()}
+                className="text-gray-600 hover:text-orange-600 hover:bg-orange-50 px-0"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Articles
+              </Button>
+            </div>
 
             {/* Article Meta */}
             <div className="mb-8">
