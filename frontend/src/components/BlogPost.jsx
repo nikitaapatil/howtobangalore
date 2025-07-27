@@ -243,59 +243,61 @@ const BlogPost = () => {
       </div>
 
       {/* Related Articles */}
-      <section className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Articles</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {relatedPosts.map((relatedPost) => (
-              <Card key={relatedPost.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                {relatedPost.featuredImage && (
-                  <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
-                    <img 
-                      src={relatedPost.featuredImage} 
-                      alt={relatedPost.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    {relatedPost.featured && (
-                      <Badge variant="outline" className="text-orange-600 border-orange-200">
-                        Featured
-                      </Badge>
-                    )}
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {relatedPost.readTime}
+      {relatedPosts.length > 0 && (
+        <section className="bg-white py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Articles</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              {relatedPosts.map((relatedPost) => (
+                <Card key={relatedPost.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  {relatedPost.featured_image && (
+                    <div className="w-full h-48 bg-gray-200 overflow-hidden rounded-t-lg">
+                      <img 
+                        src={relatedPost.featured_image} 
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  </div>
-                  <CardTitle className="text-lg leading-tight hover:text-orange-600 transition-colors">
-                    <Link to={`/post/${relatedPost.id}`}>
-                      {relatedPost.title}
-                    </Link>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-600 mb-4">
-                    {relatedPost.excerpt}
-                  </CardDescription>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">{relatedPost.publishDate}</span>
-                    <Link
-                      to={`/post/${relatedPost.id}`}
-                      className="text-orange-600 hover:text-orange-700 font-medium flex items-center group"
-                    >
-                      Read More
-                      <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  )}
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      {relatedPost.featured && (
+                        <Badge variant="outline" className="text-orange-600 border-orange-200">
+                          Featured
+                        </Badge>
+                      )}
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {relatedPost.read_time}
+                      </div>
+                    </div>
+                    <CardTitle className="text-lg leading-tight hover:text-orange-600 transition-colors">
+                      <Link to={`/${relatedPost.slug}`}>
+                        {relatedPost.title}
+                      </Link>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-gray-600 mb-4">
+                      {relatedPost.excerpt}
+                    </CardDescription>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">{relatedPost.publish_date}</span>
+                      <Link
+                        to={`/${relatedPost.slug}`}
+                        className="text-orange-600 hover:text-orange-700 font-medium flex items-center group"
+                      >
+                        Read More
+                        <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="py-12 bg-gradient-to-r from-orange-600 to-amber-600">
