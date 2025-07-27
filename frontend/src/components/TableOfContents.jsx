@@ -73,14 +73,14 @@ const TableOfContents = ({ content }) => {
 
   return (
     <div className="sticky top-24 w-72">
-      <Card className="shadow-lg border border-gray-200 bg-white">
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-t-lg border-b border-gray-100">
-          <CardTitle className="text-base font-bold text-gray-900 flex items-center">
+      <div className="bg-gray-50 border-l-4 border-orange-500 pl-6 pr-4 py-6 rounded-r-lg">
+        <div className="pb-4 border-b border-gray-200">
+          <h3 className="text-base font-bold text-gray-900 flex items-center">
             <List className="h-5 w-5 mr-2 text-orange-600" />
             Table of Contents
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-4 max-h-[70vh] overflow-y-auto">
+          </h3>
+        </div>
+        <div className="pt-4 max-h-[70vh] overflow-y-auto">
           <nav className="space-y-2">
             {headings.map((heading) => (
               <button
@@ -89,7 +89,7 @@ const TableOfContents = ({ content }) => {
                 className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
                   activeHeading === heading.id
                     ? 'bg-orange-100 text-orange-800 font-semibold border-l-3 border-orange-500 shadow-sm'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-3 border-transparent'
+                    : 'text-gray-600 hover:bg-white hover:text-gray-900 border-l-3 border-transparent hover:shadow-sm'
                 } ${
                   heading.level === 2 ? 'pl-3 font-medium' : 
                   heading.level === 3 ? 'pl-6 font-normal' : 
@@ -107,7 +107,7 @@ const TableOfContents = ({ content }) => {
           </nav>
           
           {/* Progress indicator */}
-          <div className="mt-6 pt-4 border-t border-gray-100">
+          <div className="mt-6 pt-4 border-t border-gray-200">
             <div className="text-xs text-gray-500 mb-2">Reading Progress</div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
@@ -116,8 +116,8 @@ const TableOfContents = ({ content }) => {
               ></div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
