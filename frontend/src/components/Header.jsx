@@ -34,15 +34,15 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-18 py-2">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-            <div className="bg-orange-500 text-white p-2 rounded-lg">
-              <MapPin className="h-5 w-5" />
+            <div className="bg-orange-500 text-white p-2.5 rounded-lg">
+              <MapPin className="h-6 w-6" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">How to Bangalore</h1>
-              <p className="text-xs text-gray-600 leading-tight">The Ultimate City Guide</p>
+              <h1 className="text-xl font-bold text-gray-900 leading-tight">How to Bangalore</h1>
+              <p className="text-sm text-gray-600 leading-tight">The Ultimate City Guide</p>
             </div>
             <div className="sm:hidden">
               <h1 className="text-lg font-bold text-gray-900">How to Bangalore</h1>
