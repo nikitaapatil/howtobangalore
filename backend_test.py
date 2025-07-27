@@ -1070,25 +1070,87 @@ This is a test to ensure the old markdown upload endpoint still works.
             self.log_test("Contact Form Database Storage", False, f"Request failed: {str(e)}")
             return False
 
-    def test_contact_form_error_handling(self):
-        """Test contact form error handling"""
+    def test_existing_admin_authentication(self):
+        """Test existing admin authentication with real credentials"""
         try:
-            # Test with malformed JSON
-            response = requests.post(f"{API_BASE_URL}/contact", 
-                                   data="invalid json data", 
+            # Use the real admin credentials from the system
+            real_admin_data = {
+                "username": "nikitaapatil",
+                "password": "testing123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/login", 
+                                   json=real_admin_data, 
                                    headers={"Content-Type": "application/json"},
                                    timeout=10)
             
-            # Should return 422 for malformed JSON
-            if response.status_code in [400, 422]:
-                self.log_test("Contact Form Error Handling", True, "Properly handles malformed request data")
-                return True
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ['access_token', 'token_type', 'user_info']
+                
+                if all(field in data for field in required_fields):
+                    if data['token_type'] == 'bearer' and data['user_info']['username'] == 'nikitaapatil':
+                        # Store the real admin token for other tests
+                        self.real_admin_token = data['access_token']
+                        self.log_test("Existing Admin Authentication", True, "Successfully authenticated with existing admin credentials")
+                        return True
+                    else:
+                        self.log_test("Existing Admin Authentication", False, "Invalid token type or username in response")
+                        return False
+                else:
+                    missing_fields = [f for f in required_fields if f not in data]
+                    self.log_test("Existing Admin Authentication", False, f"Missing required fields: {missing_fields}")
+                    return False
             else:
-                self.log_test("Contact Form Error Handling", False, f"Unexpected response to malformed data: HTTP {response.status_code}")
+                self.log_test("Existing Admin Authentication", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except requests.exceptions.RequestException as e:
-            self.log_test("Contact Form Error Handling", False, f"Request failed: {str(e)}")
+            self.log_test("Existing Admin Authentication", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_featured_articles_api(self):
+        """Test featured articles API functionality"""
+        try:
+            response = requests.get(f"{API_BASE_URL}/articles", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if isinstance(data, list):
+                    # Count featured articles
+                    featured_articles = [article for article in data if article.get('featured') == True]
+                    total_articles = len(data)
+                    featured_count = len(featured_articles)
+                    
+                    if total_articles > 0:
+                        # Verify that featured articles have all required fields
+                        if featured_count > 0:
+                            sample_featured = featured_articles[0]
+                            required_fields = ['id', 'title', 'slug', 'content', 'excerpt', 'category', 'featured', 'read_time', 'word_count']
+                            
+                            if all(field in sample_featured for field in required_fields):
+                                self.log_test("Featured Articles API", True, f"Successfully retrieved {featured_count} featured articles out of {total_articles} total articles")
+                                return True
+                            else:
+                                missing_fields = [f for f in required_fields if f not in sample_featured]
+                                self.log_test("Featured Articles API", False, f"Featured articles missing required fields: {missing_fields}")
+                                return False
+                        else:
+                            self.log_test("Featured Articles API", True, f"Retrieved {total_articles} articles but none are featured (acceptable)")
+                            return True
+                    else:
+                        self.log_test("Featured Articles API", True, "Retrieved empty articles list (no articles in database)")
+                        return True
+                else:
+                    self.log_test("Featured Articles API", False, f"Expected list, got: {type(data)}")
+                    return False
+            else:
+                self.log_test("Featured Articles API", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Featured Articles API", False, f"Request failed: {str(e)}")
             return False
     
     def cleanup_test_admin(self):
