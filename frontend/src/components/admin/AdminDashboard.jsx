@@ -479,6 +479,7 @@ const AdminDashboard = () => {
             </ul>
           )}
         </div>
+        )}
       </main>
 
       {/* Upload Modal */}
