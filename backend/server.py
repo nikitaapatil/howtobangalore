@@ -407,7 +407,7 @@ async def clear_all_articles(current_user: AdminUser = Depends(get_current_user)
 async def upload_file(
     file: UploadFile = File(...),
     category: str = Form(...),
-    subcategory: str = Form(...),
+    subcategory: str = Form(""),
     featured: bool = Form(False),
     current_user: AdminUser = Depends(get_current_user)
 ):
