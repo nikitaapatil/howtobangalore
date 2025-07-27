@@ -1231,6 +1231,9 @@ This is a test to ensure the old markdown upload endpoint still works.
         self.test_admin_articles_management()
         self.test_article_update()
         
+        # Test featured articles functionality
+        self.test_featured_articles_api()
+        
         print("\n" + "="*50)
         print("HTML FILE UPLOAD FUNCTIONALITY TESTING")
         print("="*50)
