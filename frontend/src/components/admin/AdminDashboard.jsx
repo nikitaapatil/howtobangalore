@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import PasswordChange from './PasswordChange';
 import { 
   FileText, 
   Plus, 
@@ -10,7 +11,9 @@ import {
   LogOut,
   Search,
   Filter,
-  Download
+  Download,
+  Settings,
+  Shield
 } from 'lucide-react';
 
 const AdminDashboard = () => {
