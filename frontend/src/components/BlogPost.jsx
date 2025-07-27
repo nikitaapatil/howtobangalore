@@ -322,13 +322,27 @@ const BlogPost = () => {
                       <p className="mt-1">Part of <span className="capitalize font-medium text-gray-700">{displayPost.category}</span> guides</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="hover:bg-orange-50 hover:border-orange-200"
+                        onClick={handleShare}
+                      >
                         <Share2 className="h-4 w-4 mr-2" />
                         Share Article
                       </Button>
-                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
-                        <Bookmark className="h-4 w-4 mr-2" />
-                        Bookmark
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className={`hover:border-orange-200 ${
+                          isBookmarked 
+                            ? 'bg-orange-50 text-orange-700 border-orange-200' 
+                            : 'hover:bg-orange-50'
+                        }`}
+                        onClick={handleBookmark}
+                      >
+                        <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
+                        {isBookmarked ? 'Bookmarked' : 'Bookmark'}
                       </Button>
                     </div>
                   </div>
