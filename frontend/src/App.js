@@ -13,6 +13,7 @@ import PrivacyPage from "./components/PrivacyPage";
 import TermsPage from "./components/TermsPage";
 import DisclaimerPage from "./components/DisclaimerPage";
 import SitemapPage from "./components/SitemapPage";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 import AdminAuth from "./components/admin/AdminAuth";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import ArticleEditor from "./components/admin/ArticleEditor";
