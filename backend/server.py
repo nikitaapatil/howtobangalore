@@ -295,7 +295,7 @@ async def create_article(
     title: str = Form(...),
     content: str = Form(...),
     category: str = Form(...),
-    subcategory: str = Form(...),
+    subcategory: str = Form(""),
     featured: bool = Form(False),
     published: bool = Form(True),
     file: Optional[UploadFile] = File(None),
