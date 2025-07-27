@@ -965,7 +965,19 @@ With multiple transport options, getting around Bangalore is manageable with pro
         self.test_published_articles_list()
         self.test_admin_articles_management()
         self.test_article_update()
-        self.test_markdown_file_upload()
+        
+        print("\n" + "="*50)
+        print("HTML FILE UPLOAD FUNCTIONALITY TESTING")
+        print("="*50)
+        
+        # Test new HTML upload functionality
+        html_article = self.test_html_file_upload()
+        self.test_markdown_file_upload_new_endpoint()
+        self.test_file_type_validation()
+        self.test_html_content_processing()
+        self.test_dual_format_support()
+        
+        # Test article deletion
         self.test_article_deletion()
         
         print("\n" + "="*50)
