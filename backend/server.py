@@ -108,6 +108,12 @@ class ArticleUpdate(BaseModel):
     featured: Optional[bool] = None
     published: Optional[bool] = None
 
+class ContactForm(BaseModel):
+    name: str
+    email: str
+    subject: str
+    message: str
+
 # Utility functions
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
