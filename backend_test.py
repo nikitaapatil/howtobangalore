@@ -1506,6 +1506,19 @@ This is a test to ensure the old markdown upload endpoint still works.
             self.test_admin_login()
         self.test_protected_route_access()
         self.test_jwt_token_validation()
+
+        print("\n" + "="*50)
+        print("PASSWORD CHANGE FUNCTIONALITY TESTING")
+        print("="*50)
+        
+        # Test password change functionality
+        self.test_password_change_valid()
+        self.test_password_change_wrong_current_password()
+        self.test_password_change_weak_password()
+        self.test_password_change_mismatch_confirmation()
+        self.test_password_change_same_password()
+        self.test_password_change_no_authentication()
+        self.test_password_change_invalid_token()
         
         print("\n" + "="*50)
         print("ARTICLE MANAGEMENT SYSTEM TESTING")
