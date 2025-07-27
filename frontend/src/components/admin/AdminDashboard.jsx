@@ -451,8 +451,8 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
   };
 
   const handleUpload = async () => {
-    if (!file || !category || !subcategory) {
-      alert('Please select a file, category, and subcategory');
+    if (!file || !category) {
+      alert('Please select a file and category');
       return;
     }
 
@@ -460,7 +460,7 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('category', category);
-    formData.append('subcategory', subcategory);
+    formData.append('subcategory', subcategory || '');
     formData.append('featured', featured);
 
     try {
