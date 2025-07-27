@@ -1745,6 +1745,153 @@ This is a test to ensure the old markdown upload endpoint still works.
             self.log_test("Analytics Config (Data Persistence)", False, f"Request failed: {str(e)}")
             return False
     
+    def test_sitemap_xml_generation(self):
+        """Test XML sitemap generation for Google Search Console"""
+        try:
+            response = requests.get(f"{API_BASE_URL}/sitemap.xml", timeout=10)
+            
+            if response.status_code == 200:
+                # Check if response is XML
+                content_type = response.headers.get('content-type', '')
+                if 'xml' in content_type.lower():
+                    xml_content = response.text
+                    
+                    # Verify XML sitemap structure
+                    required_elements = [
+                        '<?xml version="1.0" encoding="UTF-8"?>',
+                        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+                        '<url>',
+                        '<loc>',
+                        '<lastmod>',
+                        '<changefreq>',
+                        '<priority>',
+                        '</urlset>'
+                    ]
+                    
+                    missing_elements = [elem for elem in required_elements if elem not in xml_content]
+                    
+                    if not missing_elements:
+                        # Check for expected pages
+                        expected_pages = [
+                            'https://howtobangalore.com/',  # Homepage
+                            'https://howtobangalore.com/about',  # About page
+                            'https://howtobangalore.com/contact',  # Contact page
+                            'https://howtobangalore.com/category/housing',  # Housing category
+                            'https://howtobangalore.com/category/transport',  # Transport category
+                            'https://howtobangalore.com/category/utilities',  # Utilities category
+                            'https://howtobangalore.com/category/lifestyle'  # Lifestyle category
+                        ]
+                        
+                        pages_found = sum(1 for page in expected_pages if page in xml_content)
+                        
+                        if pages_found >= 5:  # At least most expected pages should be present
+                            self.log_test("Sitemap XML Generation", True, f"Successfully generated XML sitemap with {pages_found} expected pages and proper XML structure")
+                            return True
+                        else:
+                            self.log_test("Sitemap XML Generation", False, f"Only {pages_found} expected pages found in sitemap")
+                            return False
+                    else:
+                        self.log_test("Sitemap XML Generation", False, f"Missing XML elements: {missing_elements}")
+                        return False
+                else:
+                    self.log_test("Sitemap XML Generation", False, f"Response is not XML format: {content_type}")
+                    return False
+            else:
+                self.log_test("Sitemap XML Generation", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Sitemap XML Generation", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_robots_txt_generation(self):
+        """Test robots.txt generation for search engines"""
+        try:
+            response = requests.get(f"{API_BASE_URL}/robots.txt", timeout=10)
+            
+            if response.status_code == 200:
+                # Check if response is plain text
+                content_type = response.headers.get('content-type', '')
+                if 'text/plain' in content_type.lower():
+                    robots_content = response.text
+                    
+                    # Verify robots.txt structure and content
+                    required_directives = [
+                        'User-agent: *',
+                        'Allow: /',
+                        'Disallow: /admin/',
+                        'Disallow: /api/',
+                        'Sitemap: https://howtobangalore.com/api/sitemap.xml'
+                    ]
+                    
+                    missing_directives = [directive for directive in required_directives if directive not in robots_content]
+                    
+                    if not missing_directives:
+                        # Check for expected allowed paths
+                        expected_allows = [
+                            'Allow: /about',
+                            'Allow: /contact',
+                            'Allow: /category/',
+                            'Allow: /privacy',
+                            'Allow: /terms'
+                        ]
+                        
+                        allows_found = sum(1 for allow in expected_allows if allow in robots_content)
+                        
+                        if allows_found >= 3:  # At least most expected allows should be present
+                            self.log_test("Robots.txt Generation", True, f"Successfully generated robots.txt with proper directives and {allows_found} allowed paths")
+                            return True
+                        else:
+                            self.log_test("Robots.txt Generation", False, f"Only {allows_found} expected allow directives found")
+                            return False
+                    else:
+                        self.log_test("Robots.txt Generation", False, f"Missing required directives: {missing_directives}")
+                        return False
+                else:
+                    self.log_test("Robots.txt Generation", False, f"Response is not plain text format: {content_type}")
+                    return False
+            else:
+                self.log_test("Robots.txt Generation", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Robots.txt Generation", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_analytics_public_endpoint(self):
+        """Test public analytics configuration endpoint (no authentication required)"""
+        try:
+            response = requests.get(f"{API_BASE_URL}/analytics-public", timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                expected_fields = ['googleAnalyticsId', 'googleTagManagerId']
+                
+                if all(field in data for field in expected_fields):
+                    # Check if the fields are strings (can be empty)
+                    if all(isinstance(data[field], str) for field in expected_fields):
+                        # Test with the specific Google Analytics ID mentioned in review request
+                        if data.get('googleAnalyticsId') == 'G-21QZFFT7PY' or data.get('googleAnalyticsId') == '':
+                            self.log_test("Analytics Public Endpoint", True, f"Successfully retrieved public analytics config: {data}")
+                            return True
+                        else:
+                            self.log_test("Analytics Public Endpoint", True, f"Retrieved public analytics config with different ID: {data}")
+                            return True
+                    else:
+                        self.log_test("Analytics Public Endpoint", False, f"Analytics fields are not strings: {data}")
+                        return False
+                else:
+                    missing_fields = [f for f in expected_fields if f not in data]
+                    self.log_test("Analytics Public Endpoint", False, f"Missing required fields: {missing_fields}")
+                    return False
+            else:
+                self.log_test("Analytics Public Endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Analytics Public Endpoint", False, f"Request failed: {str(e)}")
+            return False
+
     def cleanup_test_admin(self):
         """Clean up test admin user (if possible)"""
         # Note: The API doesn't provide admin deletion endpoint, so we'll just note this
