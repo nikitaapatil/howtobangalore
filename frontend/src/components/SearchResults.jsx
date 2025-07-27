@@ -6,28 +6,66 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-// Try to import user articles first, fallback to enhanced mock
-import userArticles from '../data/user_articles.json';
-import { searchPosts as oldSearchPosts, categories } from '../data/updated_enhanced_mock';
-
-// Create a search function for user articles
-const searchUserPosts = (query) => {
-  if (!query.trim() || !userArticles) return userArticles || [];
-  
-  const lowerQuery = query.toLowerCase();
-  return userArticles.filter(post => 
-    post.title.toLowerCase().includes(lowerQuery) ||
-    post.excerpt.toLowerCase().includes(lowerQuery)
-  );
-};
-
-// Use user articles search if available, otherwise fallback to old search
-const searchPosts = userArticles && userArticles.length > 0 ? searchUserPosts : oldSearchPosts;
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryFilter = searchParams.get('category') || 'all';
+  
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  useEffect(() => {
+    performSearch();
+  }, [query, categoryFilter, articles]);
+
+  const fetchArticles = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/articles`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setArticles(data);
+      } else {
+        console.error('Failed to fetch articles');
+      }
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const performSearch = () => {
+    if (!query.trim()) {
+      setSearchResults(articles);
+      return;
+    }
+    
+    const lowerQuery = query.toLowerCase();
+    let filtered = articles.filter(post => 
+      post.title.toLowerCase().includes(lowerQuery) ||
+      post.excerpt.toLowerCase().includes(lowerQuery) ||
+      post.content.toLowerCase().includes(lowerQuery)
+    );
+
+    // Apply category filter
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter(post => post.category === categoryFilter);
+    }
+
+    setSearchResults(filtered);
+  };
+
+  // Get unique categories from articles
+  const categories = [...new Set(articles.map(article => article.category))].filter(Boolean);
   
   const [searchQuery, setSearchQuery] = useState(query);
   const [results, setResults] = useState([]);
