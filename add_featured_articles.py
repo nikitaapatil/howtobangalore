@@ -714,9 +714,14 @@ featured_articles = [
     }
 ]
 
-def create_article(article_data):
+def create_article(article_data, token):
     """Create a single article via API"""
     url = f"{BACKEND_URL}/api/admin/articles"
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
     
     article = {
         "id": str(uuid.uuid4()),
@@ -738,7 +743,7 @@ def create_article(article_data):
     }
     
     try:
-        response = requests.post(url, json=article, timeout=30)
+        response = requests.post(url, json=article, headers=headers, timeout=30)
         if response.status_code == 201:
             print(f"✅ Created: {article_data['title']}")
             return True
@@ -750,9 +755,37 @@ def create_article(article_data):
         print(f"❌ Network error creating {article_data['title']}: {str(e)}")
         return False
 
+def get_auth_token():
+    """Get JWT token for authentication"""
+    login_url = f"{BACKEND_URL}/api/admin/login"
+    login_data = {
+        "username": "nikitaapatil",
+        "password": "testing123"
+    }
+    
+    try:
+        response = requests.post(login_url, json=login_data, timeout=10)
+        if response.status_code == 200:
+            return response.json()["access_token"]
+        else:
+            print(f"❌ Login failed: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Login error: {str(e)}")
+        return None
+
 def main():
     """Create all featured articles"""
     print("🚀 Starting to create 10 featured articles for How to Bangalore...")
+    
+    # Get authentication token
+    print("🔐 Authenticating...")
+    token = get_auth_token()
+    if not token:
+        print("❌ Failed to authenticate. Exiting.")
+        return
+    
+    print("✅ Authentication successful!")
     
     success_count = 0
     total_articles = len(featured_articles)
@@ -760,7 +793,7 @@ def main():
     for i, article in enumerate(featured_articles, 1):
         print(f"\n📝 Creating article {i}/{total_articles}: {article['title']}")
         
-        if create_article(article):
+        if create_article(article, token):
             success_count += 1
         
         # Small delay between requests
