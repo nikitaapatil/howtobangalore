@@ -334,6 +334,10 @@ async def reset_admin_password():
 async def debug_admin_users():
     """Debug endpoint to check admin users"""
     users = await db.admin_users.find({}, {"hashed_password": 0}).to_list(10)
+    # Convert ObjectId to string for JSON serialization
+    for user in users:
+        if "_id" in user:
+            user["_id"] = str(user["_id"])
     return {"users": users}
 
 @api_router.get("/admin/me")
