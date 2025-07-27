@@ -72,36 +72,50 @@ const TableOfContents = ({ content }) => {
   if (headings.length === 0) return null;
 
   return (
-    <div className="sticky top-24 w-64">
-      <Card className="shadow-sm border">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-gray-900 flex items-center">
-            <List className="h-4 w-4 mr-2" />
+    <div className="sticky top-24 w-72">
+      <Card className="shadow-lg border border-gray-200 bg-white">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-t-lg border-b border-gray-100">
+          <CardTitle className="text-base font-bold text-gray-900 flex items-center">
+            <List className="h-5 w-5 mr-2 text-orange-600" />
             Table of Contents
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0 max-h-96 overflow-y-auto">
-          <nav className="space-y-1">
+        <CardContent className="pt-4 max-h-[70vh] overflow-y-auto">
+          <nav className="space-y-2">
             {headings.map((heading) => (
               <button
                 key={heading.id}
                 onClick={() => scrollToHeading(heading.id)}
-                className={`block w-full text-left px-2 py-1 rounded text-sm transition-colors ${
+                className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
                   activeHeading === heading.id
-                    ? 'bg-orange-100 text-orange-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'bg-orange-100 text-orange-800 font-semibold border-l-3 border-orange-500 shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-3 border-transparent'
                 } ${
-                  heading.level === 2 ? 'pl-2' : 
-                  heading.level === 3 ? 'pl-6' : 
-                  'pl-10'
+                  heading.level === 2 ? 'pl-3 font-medium' : 
+                  heading.level === 3 ? 'pl-6 font-normal' : 
+                  'pl-9 font-normal text-xs'
                 }`}
               >
-                <div className="truncate" title={heading.text}>
+                <div className="truncate leading-relaxed" title={heading.text}>
+                  {heading.level === 2 && <span className="text-orange-500 mr-2">▶</span>}
+                  {heading.level === 3 && <span className="text-gray-400 mr-2">◦</span>}
+                  {heading.level > 3 && <span className="text-gray-300 mr-2">-</span>}
                   {heading.text}
                 </div>
               </button>
             ))}
           </nav>
+          
+          {/* Progress indicator */}
+          <div className="mt-6 pt-4 border-t border-gray-100">
+            <div className="text-xs text-gray-500 mb-2">Reading Progress</div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-orange-500 to-amber-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(100, (headings.findIndex(h => h.id === activeHeading) + 1) / headings.length * 100)}%` }}
+              ></div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
