@@ -1193,6 +1193,16 @@ This is a test to ensure the old markdown upload endpoint still works.
         # Test database and system functionality
         self.test_database_operations()
         self.test_slug_generation()
+
+        print("\n" + "="*50)
+        print("CONTACT FORM FUNCTIONALITY TESTING")
+        print("="*50)
+        
+        # Test new contact form functionality
+        self.test_contact_form_submission()
+        self.test_contact_form_validation()
+        self.test_contact_form_database_storage()
+        self.test_contact_form_error_handling()
         
         # Cleanup
         self.cleanup_test_articles()
