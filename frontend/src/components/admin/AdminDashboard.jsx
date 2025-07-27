@@ -375,18 +375,8 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === 'analytics' && (
-          <div className="bg-white shadow rounded-lg mb-8">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Analytics & Ads Management</h3>
-              <p className="text-gray-600 mb-4">
-                Configure Google Analytics, Search Console, and Google Ads settings for your site.
-              </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-700">
-                  This section will be populated with analytics and ads management tools.
-                </p>
-              </div>
-            </div>
+          <div className="mb-8">
+            <AnalyticsManager />
           </div>
         )}
 
