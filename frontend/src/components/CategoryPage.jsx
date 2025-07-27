@@ -12,6 +12,13 @@ const CategoryPage = () => {
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
+  // Helper function to decode HTML entities
+  const decodeHtmlEntities = (text) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
   useEffect(() => {
     fetchArticles();
   }, []);
