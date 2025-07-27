@@ -5,7 +5,7 @@ const AnalyticsTracker = () => {
     // Load analytics configuration from backend
     const loadAnalyticsConfig = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/analytics-config`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/analytics-public`);
         if (response.ok) {
           const config = await response.json();
           
@@ -31,6 +31,8 @@ const AnalyticsTracker = () => {
     // Avoid loading if already loaded
     if (window.gtag) return;
 
+    console.log('Loading Google Analytics with ID:', measurementId);
+
     // Create Google Analytics script
     const script = document.createElement('script');
     script.async = true;
@@ -47,11 +49,15 @@ const AnalyticsTracker = () => {
       page_location: window.location.href,
       page_path: window.location.pathname
     });
+
+    console.log('Google Analytics loaded successfully');
   };
 
   const loadGoogleTagManager = (containerId) => {
     // Avoid loading if already loaded
     if (window.google_tag_manager) return;
+
+    console.log('Loading Google Tag Manager with ID:', containerId);
 
     // Create Google Tag Manager script
     const script = document.createElement('script');
@@ -73,6 +79,7 @@ const AnalyticsTracker = () => {
     document.body.appendChild(noscript);
 
     window.google_tag_manager = true;
+    console.log('Google Tag Manager loaded successfully');
   };
 
   return null; // This component doesn't render anything
