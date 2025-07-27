@@ -464,7 +464,7 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
     formData.append('featured', featured);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/articles/upload-markdown`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/articles/upload-file`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
