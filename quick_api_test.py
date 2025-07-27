@@ -66,7 +66,7 @@ def test_existing_endpoints():
     # Test 4: Admin login endpoint (without credentials)
     try:
         response = requests.post(f"{API_BASE_URL}/admin/login", 
-                               json={"username": "test", "password": "test"}, 
+                               json={"username": "nonexistent_user_12345", "password": "invalid_password_67890"}, 
                                timeout=10)
         if response.status_code == 401:
             tests.append(("Admin Login Endpoint", True, "Properly rejects invalid credentials"))
