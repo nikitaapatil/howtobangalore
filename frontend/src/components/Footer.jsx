@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Mail, ExternalLink, Heart } from 'lucide-react';
-import { categories } from '../data/updated_enhanced_mock';
+import { MapPin, Heart } from 'lucide-react';
 
 const Footer = () => {
+  // Use actual categories from the database
+  const categories = [
+    { id: 'housing', name: 'Housing' },
+    { id: 'transport', name: 'Transport' },
+    { id: 'utilities', name: 'Utilities' },
+    { id: 'lifestyle', name: 'Lifestyle' }
+  ];
+
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
@@ -22,41 +29,23 @@ const Footer = () => {
             <p className="text-gray-400 mb-4">
               Your pragmatic guide to thriving in India's Silicon Valley. Navigate the Bangalore Paradox with insider knowledge and practical solutions.
             </p>
-            <div className="flex items-center text-sm text-gray-400">
-              <Mail className="h-4 w-4 mr-2" />
-              <a href="mailto:hello@howtobangalore.com" className="hover:text-orange-400 transition-colors">
-                hello@howtobangalore.com
-              </a>
-            </div>
           </div>
 
           {/* Categories Navigation */}
-          <div className="lg:col-span-2">
-            <h4 className="text-lg font-semibold text-white mb-4">Explore Categories</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-4">Main Categories</h4>
+            <ul className="space-y-3">
               {categories.map((category) => (
-                <div key={category.id}>
+                <li key={category.id}>
                   <Link
                     to={`/category/${category.id}`}
                     className="text-orange-400 hover:text-orange-300 font-medium transition-colors"
                   >
                     {category.name}
                   </Link>
-                  <ul className="mt-2 space-y-1">
-                    {category.subcategories.slice(0, 3).map((subcategory) => (
-                      <li key={subcategory.id}>
-                        <Link
-                          to={`/category/${category.id}/${subcategory.id}`}
-                          className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
-                        >
-                          {subcategory.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* Legal & Info */}
