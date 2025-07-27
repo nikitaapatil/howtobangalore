@@ -380,6 +380,8 @@ const AdminDashboard = () => {
                       </a>
                       <a
                         href={`/admin/articles/edit/${article.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                       >
                         <Edit className="h-4 w-4" />
