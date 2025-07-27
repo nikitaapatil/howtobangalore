@@ -351,7 +351,7 @@ async def create_article(
     
     # Create article
     article = Article(
-        title=title,
+        title=clean_title_text(title),
         slug=slug,
         content=html_content,
         excerpt=extract_excerpt(content),
