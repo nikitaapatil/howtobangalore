@@ -119,6 +119,12 @@ class PasswordChangeRequest(BaseModel):
     new_password: str
     confirm_password: str
 
+class AnalyticsConfig(BaseModel):
+    googleAnalyticsId: Optional[str] = ""
+    googleSearchConsoleId: Optional[str] = ""
+    googleAdsId: Optional[str] = ""
+    googleTagManagerId: Optional[str] = ""
+
 # Utility functions
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
