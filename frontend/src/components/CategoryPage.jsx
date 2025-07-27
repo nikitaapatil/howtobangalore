@@ -212,12 +212,6 @@ const CategoryPage = () => {
                   : `No articles have been published for ${currentCategory.name} yet.`
                 }
               </p>
-              <Link
-                to="/admin"
-                className="text-orange-600 hover:text-orange-700 font-medium"
-              >
-                Admin Panel
-              </Link>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
