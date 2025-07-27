@@ -50,14 +50,6 @@ const ArticleEditor = () => {
     lifestyle: ['shopping', 'healthcare', 'education', 'entertainment']
   };
 
-  const categories = {
-    government: ['documentation', 'services'],
-    housing: ['finding-home', 'choosing-neighborhood', 'setup'],
-    transport: ['navigating-roads', 'public-transport', 'private-transport'],
-    utilities: ['electricity-water', 'internet-telecom', 'waste-management'],
-    lifestyle: ['shopping', 'healthcare', 'education', 'entertainment']
-  };
-
   // Helper function to decode HTML entities
   const decodeHtmlEntities = (text) => {
     const textarea = document.createElement('textarea');
