@@ -147,32 +147,32 @@ const BlogPost = () => {
 
             {/* Article Meta */}
             <div className="mb-8">
-              {post.featured && (
+              {displayPost.featured && (
                 <Badge variant="outline" className="text-orange-600 border-orange-200 mb-4">
                   Featured Article
                 </Badge>
               )}
               
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
-                {post.title}
+                {displayPost.title}
               </h1>
               
               <p className="text-xl text-gray-600 leading-relaxed mb-6">
-                {post.excerpt}
+                {displayPost.excerpt}
               </p>
               
               <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
                 <div className="flex items-center">
                   <Calendar className="h-4 w-4 mr-2" />
-                  <span>{post.publishDate}</span>
+                  <span>{displayPost.publishDate}</span>
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
-                  <span>{post.readTime}</span>
+                  <span>{displayPost.readTime}</span>
                 </div>
-                {post.wordCount && (
+                {displayPost.wordCount && (
                   <div className="flex items-center">
-                    <span>{post.wordCount.toLocaleString()} words</span>
+                    <span>{displayPost.wordCount.toLocaleString()} words</span>
                   </div>
                 )}
                 <div className="flex items-center space-x-3">
@@ -204,7 +204,7 @@ const BlogPost = () => {
                            prose-blockquote:border-l-4 prose-blockquote:border-orange-500 prose-blockquote:bg-orange-50 prose-blockquote:p-4 prose-blockquote:my-6
                            prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
                            prose-table:w-full prose-table:border-collapse prose-th:border prose-th:p-2 prose-td:border prose-td:p-2"
-                dangerouslySetInnerHTML={{ __html: post.content }} 
+                dangerouslySetInnerHTML={{ __html: displayPost.content }} 
               />
             </div>
 
