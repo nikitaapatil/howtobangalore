@@ -829,40 +829,6 @@ async def upload_file(
 async def submit_contact_form(form: ContactForm):
     """Handle contact form submissions and send email to nikitaapatil@gmail.com"""
     try:
-        # Email configuration (you'll need to set these in your environment)
-        smtp_server = "smtp.gmail.com"
-        smtp_port = 587
-        sender_email = "your-email@gmail.com"  # You'll need to set this
-        sender_password = "your-app-password"  # You'll need to set this
-        recipient_email = "nikitaapatil@gmail.com"
-        
-        # Create message
-        message = MIMEMultipart()
-        message["From"] = sender_email
-        message["To"] = recipient_email
-        message["Subject"] = f"Contact Form: {form.subject}"
-        
-        # Email body
-        body = f"""
-        New contact form submission from How to Bangalore:
-        
-        Name: {form.name}
-        Email: {form.email}
-        Subject: {form.subject}
-        
-        Message:
-        {form.message}
-        
-        ---
-        This message was sent from the How to Bangalore contact form.
-        """
-        
-        message.attach(MIMEText(body, "plain"))
-        
-        # For now, just log the contact form submission
-        # In a real implementation, you would configure proper email sending
-        logger.info(f"Contact form submission from {form.name} ({form.email}): {form.subject}")
-        
         # Store the contact form submission in database
         contact_submission = {
             "name": form.name,
@@ -870,10 +836,62 @@ async def submit_contact_form(form: ContactForm):
             "subject": form.subject,
             "message": form.message,
             "submitted_at": datetime.utcnow(),
-            "id": str(uuid.uuid4())
+            "id": str(uuid.uuid4()),
+            "status": "pending"
         }
         
         await db.contact_submissions.insert_one(contact_submission)
+        
+        # Log the submission for immediate notification
+        logger.info(f"CONTACT FORM SUBMISSION - Name: {form.name}, Email: {form.email}, Subject: {form.subject}")
+        logger.info(f"CONTACT MESSAGE: {form.message}")
+        logger.info(f"SUBMISSION ID: {contact_submission['id']}")
+        
+        # Try to send email notification using emergentintegrations
+        try:
+            from emergentintegrations.email import send_email
+            
+            # Format email content
+            email_subject = f"Contact Form Submission: {form.subject}"
+            email_body = f"""
+            New contact form submission from How to Bangalore:
+            
+            Name: {form.name}
+            Email: {form.email}
+            Subject: {form.subject}
+            
+            Message:
+            {form.message}
+            
+            Submission ID: {contact_submission['id']}
+            Submitted at: {contact_submission['submitted_at']}
+            
+            ---
+            This message was sent from the How to Bangalore contact form.
+            """
+            
+            # Send email to admin
+            email_result = send_email(
+                to_email="nikitaapatil@gmail.com",
+                subject=email_subject,
+                body=email_body,
+                from_email="noreply@howtobangalore.com"
+            )
+            
+            if email_result:
+                logger.info(f"Email notification sent successfully for submission {contact_submission['id']}")
+                # Update submission status
+                await db.contact_submissions.update_one(
+                    {"id": contact_submission['id']},
+                    {"$set": {"status": "email_sent"}}
+                )
+            else:
+                logger.warning(f"Email notification failed for submission {contact_submission['id']}")
+                
+        except ImportError:
+            logger.warning("emergentintegrations.email not available - email notification skipped")
+        except Exception as email_error:
+            logger.error(f"Email notification error for submission {contact_submission['id']}: {str(email_error)}")
         
         return {"message": "Contact form submitted successfully", "success": True}
         
