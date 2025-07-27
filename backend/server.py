@@ -496,6 +496,118 @@ async def get_public_analytics_config():
         "googleTagManagerId": config.get("googleTagManagerId", "")
     }
 
+@api_router.get("/sitemap.xml")
+async def generate_sitemap():
+    """Generate dynamic XML sitemap for Google Search Console"""
+    from datetime import datetime
+    
+    # Get all published articles
+    articles = await db.articles.find({"published": True}).to_list(1000)
+    
+    # Base URL - you should replace this with your actual domain
+    base_url = "https://howtobangalore.com"
+    
+    # Start XML sitemap
+    sitemap_xml = '''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>{base_url}/</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Static Pages -->
+  <url>
+    <loc>{base_url}/about</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>{base_url}/contact</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>{base_url}/sitemap</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Legal Pages -->
+  <url>
+    <loc>{base_url}/privacy</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>{base_url}/terms</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>{base_url}/disclaimer</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Categories -->
+  <url>
+    <loc>{base_url}/category/housing</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{base_url}/category/transport</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{base_url}/category/utilities</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{base_url}/category/lifestyle</loc>
+    <lastmod>{current_date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+'''.format(
+        base_url=base_url,
+        current_date=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S+00:00')
+    )
+    
+    # Add all articles
+    for article in articles:
+        article_date = article.get('updated_at', article.get('created_at', datetime.utcnow()))
+        if isinstance(article_date, str):
+            article_date = datetime.fromisoformat(article_date.replace('Z', '+00:00'))
+        
+        sitemap_xml += f'''  <url>
+    <loc>{base_url}/{article['slug']}</loc>
+    <lastmod>{article_date.strftime('%Y-%m-%dT%H:%M:%S+00:00')}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+'''
+    
+    # Close XML sitemap
+    sitemap_xml += '</urlset>'
+    
+    from fastapi.responses import Response
+    return Response(content=sitemap_xml, media_type="application/xml")
+
 # Article routes
 @api_router.post("/admin/articles", response_model=Article)
 async def create_article(
