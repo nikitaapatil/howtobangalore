@@ -499,7 +499,7 @@ With proper planning and research, finding suitable accommodation in Bangalore b
                         # Verify HTML content is stored as-is
                         if '<h1>' in article_data['content'] and '<h2>' in article_data['content']:
                             # Verify slug generation from HTML title
-                            if 'internet' in article_data['slug'].lower() and 'broadband' in article_data['slug'].lower():
+                            if 'test' in article_data['slug'].lower() and 'html' in article_data['slug'].lower():
                                 self.created_article_ids.append(article_data['id'])
                                 self.log_test("HTML File Upload", True, f"Successfully uploaded HTML file with title extraction and slug: {article_data['slug']}")
                                 return article_data
