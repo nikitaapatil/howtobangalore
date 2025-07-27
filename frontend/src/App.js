@@ -215,6 +215,7 @@ function AppContent() {
     <div className="App min-h-screen flex flex-col">
       <BrowserRouter>
         <ScrollToTop />
+        <AnalyticsTracker />
         <Routes>
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminAuth />} />
