@@ -80,15 +80,6 @@ const BlogPost = () => {
     fetchPost();
   }, [identifier]);
 
-  useEffect(() => {
-    // Check if current article is bookmarked
-    if (identifier) {
-      const bookmarks = JSON.parse(localStorage.getItem('how_to_bangalore_bookmarks') || '[]');
-      const isCurrentlyBookmarked = bookmarks.some(bookmark => bookmark.id === identifier);
-      setIsBookmarked(isCurrentlyBookmarked);
-    }
-  }, [identifier]);
-
   const fetchPost = async () => {
     if (!identifier) {
       setError('No article identifier provided');
