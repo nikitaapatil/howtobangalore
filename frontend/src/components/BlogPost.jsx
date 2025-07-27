@@ -358,6 +358,8 @@ const BlogPost = () => {
                       <span className="text-sm text-gray-500">{relatedPost.publish_date}</span>
                       <Link
                         to={`/${relatedPost.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-orange-600 hover:text-orange-700 font-medium flex items-center group"
                       >
                         Read More
