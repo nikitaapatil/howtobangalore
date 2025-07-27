@@ -1071,6 +1071,27 @@ This is a test to ensure the old markdown upload endpoint still works.
             self.log_test("Contact Form Database Storage", False, f"Request failed: {str(e)}")
             return False
 
+    def test_contact_form_error_handling(self):
+        """Test contact form error handling"""
+        try:
+            # Test with malformed JSON
+            response = requests.post(f"{API_BASE_URL}/contact", 
+                                   data="invalid json data", 
+                                   headers={"Content-Type": "application/json"},
+                                   timeout=10)
+            
+            # Should return 422 for malformed JSON
+            if response.status_code in [400, 422]:
+                self.log_test("Contact Form Error Handling", True, "Properly handles malformed request data")
+                return True
+            else:
+                self.log_test("Contact Form Error Handling", False, f"Unexpected response to malformed data: HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Contact Form Error Handling", False, f"Request failed: {str(e)}")
+            return False
+
     def test_existing_admin_authentication(self):
         """Test existing admin authentication with real credentials"""
         try:
