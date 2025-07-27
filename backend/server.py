@@ -479,6 +479,23 @@ async def save_analytics_config(
     
     return {"message": "Analytics configuration saved successfully"}
 
+@api_router.get("/analytics-public")
+async def get_public_analytics_config():
+    """Get public analytics configuration (no authentication required)"""
+    # Get the admin's analytics config (assuming single admin)
+    config = await db.analytics_config.find_one({"admin_email": "nikitaapatil@gmail.com"})
+    if not config:
+        return {
+            "googleAnalyticsId": "",
+            "googleTagManagerId": ""
+        }
+    
+    # Return only the tracking IDs that are needed for public tracking
+    return {
+        "googleAnalyticsId": config.get("googleAnalyticsId", ""),
+        "googleTagManagerId": config.get("googleTagManagerId", "")
+    }
+
 # Article routes
 @api_router.post("/admin/articles", response_model=Article)
 async def create_article(
