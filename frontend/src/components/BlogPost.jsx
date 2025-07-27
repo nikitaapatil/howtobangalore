@@ -189,23 +189,96 @@ const BlogPost = () => {
             </div>
 
             {/* Article Content */}
-            <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
-              <div 
-                className="prose prose-lg max-w-none 
-                           prose-headings:text-gray-900 
-                           prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:max-w-none
-                           prose-li:text-gray-700 prose-li:mb-2
+            <div className="bg-white rounded-lg shadow-sm mb-12">
+              <div className="max-w-4xl mx-auto px-8 py-12">
+                {/* Article Header */}
+                <header className="mb-10 pb-8 border-b border-gray-200">
+                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                    {displayPost.title}
+                  </h1>
+                  
+                  <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
+                    {displayPost.excerpt}
+                  </p>
+                  
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-2 text-orange-500" />
+                      <span className="font-medium">{displayPost.publishDate}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-2 text-orange-500" />
+                      <span className="font-medium">{displayPost.readTime}</span>
+                    </div>
+                    {displayPost.wordCount && (
+                      <div className="flex items-center">
+                        <span className="font-medium">{displayPost.wordCount.toLocaleString()} words</span>
+                      </div>
+                    )}
+                    <div className="flex items-center space-x-3 ml-auto">
+                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Share
+                      </Button>
+                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                        <Bookmark className="h-4 w-4 mr-2" />
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                </header>
+
+                {/* Article Content with Enhanced Typography */}
+                <article 
+                  className="reader-friendly-content prose prose-xl max-w-none
+                           prose-headings:text-gray-900 prose-headings:font-bold
+                           prose-h1:text-4xl prose-h1:mt-12 prose-h1:mb-6 prose-h1:leading-tight prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-4
+                           prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-5 prose-h2:leading-tight prose-h2:text-orange-700
+                           prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:leading-tight prose-h3:text-gray-800
+                           prose-h4:text-xl prose-h4:mt-6 prose-h4:mb-3 prose-h4:leading-tight prose-h4:text-gray-700
+                           prose-h5:text-lg prose-h5:mt-5 prose-h5:mb-2 prose-h5:font-semibold prose-h5:text-gray-700
+                           prose-h6:text-base prose-h6:mt-4 prose-h6:mb-2 prose-h6:font-semibold prose-h6:text-gray-600
+                           prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg prose-p:max-w-none
+                           prose-li:text-gray-700 prose-li:mb-2 prose-li:text-lg prose-li:leading-relaxed
                            prose-strong:text-gray-900 prose-strong:font-semibold
-                           prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-bold prose-h2:text-gray-900
-                           prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:font-semibold prose-h3:text-gray-900
-                           prose-h4:text-lg prose-h4:mt-4 prose-h4:mb-2 prose-h4:font-semibold prose-h4:text-gray-900
-                           prose-ul:mb-6 prose-ol:mb-6 prose-ul:space-y-2 prose-ol:space-y-2
+                           prose-em:text-gray-800 prose-em:italic
+                           prose-ul:mb-8 prose-ol:mb-8 prose-ul:space-y-3 prose-ol:space-y-3
                            prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6
-                           prose-blockquote:border-l-4 prose-blockquote:border-orange-500 prose-blockquote:bg-orange-50 prose-blockquote:p-4 prose-blockquote:my-6
-                           prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-                           prose-table:w-full prose-table:border-collapse prose-th:border prose-th:p-2 prose-td:border prose-td:p-2"
-                dangerouslySetInnerHTML={{ __html: displayPost.content }} 
-              />
+                           prose-ul:marker:text-orange-500 prose-ol:marker:text-orange-500 prose-ol:marker:font-semibold
+                           prose-blockquote:border-l-4 prose-blockquote:border-orange-400 prose-blockquote:bg-orange-50 
+                           prose-blockquote:p-6 prose-blockquote:my-8 prose-blockquote:rounded-r-lg prose-blockquote:text-gray-800
+                           prose-blockquote:text-lg prose-blockquote:italic prose-blockquote:font-medium
+                           prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-gray-800
+                           prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+                           prose-table:w-full prose-table:border-collapse prose-table:shadow-sm prose-table:rounded-lg prose-table:overflow-hidden
+                           prose-th:bg-orange-500 prose-th:text-white prose-th:font-semibold prose-th:p-4 prose-th:text-left
+                           prose-td:border prose-td:border-gray-200 prose-td:p-4 prose-td:text-gray-700
+                           prose-tr:even:bg-gray-50 prose-tr:hover:bg-gray-100
+                           prose-a:text-orange-600 prose-a:font-medium prose-a:no-underline hover:prose-a:text-orange-700 hover:prose-a:underline
+                           prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-img:my-8"
+                  dangerouslySetInnerHTML={{ __html: displayPost.content }} 
+                />
+
+                {/* Article Footer */}
+                <footer className="mt-16 pt-8 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-500">
+                      <p>Published on {displayPost.publishDate}</p>
+                      <p className="mt-1">Part of <span className="capitalize font-medium text-gray-700">{displayPost.category}</span> guides</p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Share Article
+                      </Button>
+                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                        <Bookmark className="h-4 w-4 mr-2" />
+                        Bookmark
+                      </Button>
+                    </div>
+                  </div>
+                </footer>
+              </div>
             </div>
 
             {/* Article Footer */}
