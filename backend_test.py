@@ -802,6 +802,73 @@ With multiple transport options, getting around Bangalore is manageable with pro
         except requests.exceptions.RequestException as e:
             self.log_test("Dual Format Support", False, f"Request failed: {str(e)}")
             return False
+
+    def test_backward_compatibility_old_endpoint(self):
+        """Test backward compatibility - old markdown upload endpoint should still work"""
+        if not self.admin_token:
+            self.log_test("Backward Compatibility (Old Endpoint)", False, "No admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.admin_token}"
+            }
+            
+            # Create a test markdown file
+            markdown_content = """# Backward Compatibility Test
+
+This is a test to ensure the old markdown upload endpoint still works.
+
+## Features
+- Old endpoint compatibility
+- Markdown processing
+- Article creation
+"""
+            
+            # Create file-like object
+            files = {
+                'file': ('backward_test.md', io.StringIO(markdown_content), 'text/markdown')
+            }
+            
+            data = {
+                'category': 'Test Category',
+                'subcategory': 'Backward Compatibility',
+                'featured': False
+            }
+            
+            # Try the old endpoint
+            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-markdown",
+                                   files=files,
+                                   data=data,
+                                   headers=headers,
+                                   timeout=15)
+            
+            if response.status_code == 200:
+                article_data = response.json()
+                required_fields = ['id', 'title', 'slug', 'content', 'category']
+                
+                if all(field in article_data for field in required_fields):
+                    if 'backward' in article_data['slug'].lower() or 'compatibility' in article_data['slug'].lower():
+                        self.created_article_ids.append(article_data['id'])
+                        self.log_test("Backward Compatibility (Old Endpoint)", True, f"Old markdown endpoint still working with slug: {article_data['slug']}")
+                        return True
+                    else:
+                        self.log_test("Backward Compatibility (Old Endpoint)", False, "Slug generation issue from old endpoint")
+                        return False
+                else:
+                    missing_fields = [f for f in required_fields if f not in article_data]
+                    self.log_test("Backward Compatibility (Old Endpoint)", False, f"Missing required fields: {missing_fields}")
+                    return False
+            elif response.status_code == 404:
+                self.log_test("Backward Compatibility (Old Endpoint)", False, "Old markdown endpoint no longer exists (404)")
+                return False
+            else:
+                self.log_test("Backward Compatibility (Old Endpoint)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Backward Compatibility (Old Endpoint)", False, f"Request failed: {str(e)}")
+            return False
     
     def test_article_deletion(self):
         """Test article deletion functionality"""
