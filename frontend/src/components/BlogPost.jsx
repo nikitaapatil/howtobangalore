@@ -12,6 +12,8 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showShareSuccess, setShowShareSuccess] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
