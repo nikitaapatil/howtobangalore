@@ -564,14 +564,14 @@ const UploadModal = ({ onClose, onSuccess, token }) => {
           {category && (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Subcategory
+                Subcategory <span className="text-gray-500">(Optional)</span>
               </label>
               <select
                 value={subcategory}
                 onChange={(e) => setSubcategory(e.target.value)}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
               >
-                <option value="">Select subcategory</option>
+                <option value="">No subcategory</option>
                 {categories[category].map(subcat => (
                   <option key={subcat} value={subcat}>
                     {subcat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
