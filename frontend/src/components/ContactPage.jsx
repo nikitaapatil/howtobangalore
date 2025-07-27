@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
