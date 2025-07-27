@@ -66,6 +66,11 @@ const AdminAuth = () => {
 
       if (!result.success) {
         setError(result.error);
+        // If error indicates account exists, switch to login mode
+        if (result.error.includes('already exists') || result.error.includes('restricted')) {
+          setIsFirstUser(false);
+          setIsLogin(true);
+        }
       }
       // Success case is handled by the AuthContext
     } catch (error) {
