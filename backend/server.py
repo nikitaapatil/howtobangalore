@@ -362,6 +362,72 @@ async def get_current_admin(current_user: AdminUser = Depends(get_current_user))
         "id": current_user.id
     }
 
+@api_router.post("/admin/change-password")
+async def change_admin_password(
+    password_change: PasswordChangeRequest,
+    current_user: AdminUser = Depends(get_current_user)
+):
+    """Change admin password with security measures"""
+    
+    # Validate password confirmation
+    if password_change.new_password != password_change.confirm_password:
+        raise HTTPException(
+            status_code=400,
+            detail="New password and confirmation password do not match"
+        )
+    
+    # Password strength validation
+    if len(password_change.new_password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters long"
+        )
+    
+    # Check for password complexity
+    if not re.search(r'[A-Za-z]', password_change.new_password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one letter"
+        )
+    
+    if not re.search(r'\d', password_change.new_password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one number"
+        )
+    
+    # Verify current password
+    if not verify_password(password_change.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=400,
+            detail="Current password is incorrect"
+        )
+    
+    # Check if new password is different from current password
+    if verify_password(password_change.new_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=400,
+            detail="New password must be different from current password"
+        )
+    
+    # Hash new password
+    new_hashed_password = get_password_hash(password_change.new_password)
+    
+    # Update password in database
+    await db.admin_users.update_one(
+        {"email": current_user.email},
+        {
+            "$set": {
+                "hashed_password": new_hashed_password,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+    
+    logger.info(f"Password changed for admin: {current_user.email}")
+    
+    return {"message": "Password changed successfully"}
+
 # Article routes
 @api_router.post("/admin/articles", response_model=Article)
 async def create_article(
