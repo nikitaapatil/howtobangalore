@@ -197,15 +197,18 @@ backend:
 
   - task: "TinyMCE API Key Integration"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/components/admin/ArticleEditor.jsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Successfully integrated TinyMCE API key (hptwgm0493ocvg4usqjo1pipdcon7ji3b97pvo28dea59zur) into ArticleEditor component. Frontend service restarted to apply changes. Application verified working - homepage and admin authentication pages load correctly. TinyMCE premium features now enabled and branding removed."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE FOUND: TinyMCE integration cannot be properly tested due to admin authentication flow problems. AUTHENTICATION ANALYSIS: Admin account exists (nikitaapatil@gmail.com) but login flow is broken - system shows 'An admin account with this email already exists. Please login instead.' but switching to login mode fails. Tested credentials admin/admin123 work for initial auth but user gets stuck in setup loop. TINYMCE STATUS: Cannot access ArticleEditor component due to auth issues. Code review shows API key (hptwgm0493ocvg4usqjo1pipdcon7ji3b97pvo28dea59zur) is properly integrated in ArticleEditor.jsx with correct configuration for premium features. FRONTEND INTEGRATION: Homepage loads correctly with proper empty state, indicating API integration works. Backend responds correctly to requests. RECOMMENDATION: Fix admin authentication flow to enable TinyMCE testing. The TinyMCE integration appears correctly implemented in code but cannot be verified due to access issues."
 
 frontend:
   - task: "User articles data integration"
