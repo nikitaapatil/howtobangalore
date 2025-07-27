@@ -487,7 +487,7 @@ async def upload_file(
     
     # Create article
     article = Article(
-        title=title,
+        title=clean_title_text(title),
         slug=slug,
         content=html_content,
         excerpt=extract_excerpt(file_content if not is_html else html_content),
