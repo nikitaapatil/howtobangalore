@@ -57,41 +57,6 @@ const ArticleEditor = () => {
     return textarea.value;
   };
 
-  // TinyMCE configuration
-  const editorConfig = {
-    height: 500,
-    menubar: true,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons'
-    ],
-    toolbar: 'undo redo | blocks | ' +
-      'bold italic forecolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | image link | preview code | help',
-    content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
-    images_upload_handler: (blobInfo, success, failure) => {
-      // Convert image to base64
-      const reader = new FileReader();
-      reader.onload = () => {
-        success(reader.result);
-      };
-      reader.onerror = () => {
-        failure('Image upload failed');
-      };
-      reader.readAsDataURL(blobInfo.blob());
-    },
-    setup: (editor) => {
-      editor.on('change', () => {
-        const content = editor.getContent();
-        setFormData(prev => ({ ...prev, content }));
-      });
-    },
-    branding: false,
-    promotion: false
-  };
-
   useEffect(() => {
     if (articleId) {
       fetchArticle();
@@ -183,6 +148,13 @@ const ArticleEditor = () => {
     setFormData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleEditorChange = (content) => {
+    setFormData(prev => ({
+      ...prev,
+      content: content
     }));
   };
 
@@ -350,7 +322,7 @@ const ArticleEditor = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-xl max-w-none reader-friendly-content">
-                    <h1>{formData.title}</h1>
+                    <h1>{decodeHtmlEntities(formData.title)}</h1>
                     {formData.excerpt && (
                       <p className="text-xl text-gray-600 font-medium">{formData.excerpt}</p>
                     )}
@@ -363,6 +335,7 @@ const ArticleEditor = () => {
               <Card>
                 <CardHeader>
                   <Badge variant="outline" className="text-green-600 border-green-200 w-fit">
+                    <Edit3 className="h-3 w-3 mr-1" />
                     Edit Mode
                   </Badge>
                 </CardHeader>
@@ -370,6 +343,7 @@ const ArticleEditor = () => {
                   {/* Title */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Type className="inline h-4 w-4 mr-1" />
                       Article Title
                     </label>
                     <Input
@@ -398,21 +372,42 @@ const ArticleEditor = () => {
                   {/* Rich Text Editor */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Edit3 className="inline h-4 w-4 mr-1" />
                       Article Content
                     </label>
                     <div className="border border-gray-300 rounded-md">
-                      <ReactQuill
-                        theme="snow"
+                      <Editor
+                        ref={editorRef}
                         value={formData.content}
-                        onChange={(content) => handleInputChange('content', content)}
-                        modules={modules}
-                        formats={formats}
-                        placeholder="Write your article content here..."
-                        style={{ minHeight: '400px' }}
+                        onEditorChange={handleEditorChange}
+                        init={{
+                          height: 500,
+                          menubar: true,
+                          plugins: [
+                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                          ],
+                          toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image link | preview code | help',
+                          content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
+                          images_upload_handler: (blobInfo, success, failure) => {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              success(reader.result);
+                            };
+                            reader.onerror = () => {
+                              failure('Image upload failed');
+                            };
+                            reader.readAsDataURL(blobInfo.blob());
+                          },
+                          branding: false,
+                          promotion: false
+                        }}
                       />
                     </div>
                     <p className="mt-2 text-sm text-gray-500">
-                      Use the toolbar to format text, add images, links, and more.
+                      <ImageIcon className="inline h-3 w-3 mr-1" />
+                      Use the toolbar to format text, add images, links, and more. Images are automatically converted to base64 format.
                     </p>
                   </div>
                 </CardContent>
