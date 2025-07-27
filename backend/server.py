@@ -608,6 +608,35 @@ async def generate_sitemap():
     from fastapi.responses import Response
     return Response(content=sitemap_xml, media_type="application/xml")
 
+@api_router.get("/robots.txt")
+async def robots_txt():
+    """Generate robots.txt file for search engines"""
+    robots_content = """User-agent: *
+Allow: /
+
+# Important pages
+Allow: /about
+Allow: /contact
+Allow: /category/
+Allow: /privacy
+Allow: /terms
+Allow: /disclaimer
+Allow: /sitemap
+
+# Block admin areas
+Disallow: /admin/
+Disallow: /admin/*
+
+# Block API endpoints
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://howtobangalore.com/api/sitemap.xml
+"""
+    
+    from fastapi.responses import Response
+    return Response(content=robots_content, media_type="text/plain")
+
 # Article routes
 @api_router.post("/admin/articles", response_model=Article)
 async def create_article(
