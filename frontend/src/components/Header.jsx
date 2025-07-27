@@ -43,8 +43,8 @@ const Header = () => {
             <Link to="/category/transport" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
               Transport
             </Link>
-            <Link to="/category/work" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
-              Work
+            <Link to="/category/utilities" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
+              Utilities
             </Link>
             <Link to="/category/lifestyle" className="text-gray-700 hover:text-orange-600 font-medium transition-colors whitespace-nowrap">
               Lifestyle
