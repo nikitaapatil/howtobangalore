@@ -456,7 +456,8 @@ async def upload_file(
         if not title_match:
             title_match = re.search(r'<h1[^>]*>([^<]+)</h1>', file_content, re.IGNORECASE)
         
-        title = title_match.group(1).strip() if title_match else file.filename.replace('.html', '').replace('_', ' ').title()
+        raw_title = title_match.group(1).strip() if title_match else file.filename.replace('.html', '').replace('_', ' ').title()
+        title = clean_title_text(raw_title)
         
         # For HTML files, use content as-is (no markdown conversion needed)
         html_content = file_content
@@ -470,7 +471,8 @@ async def upload_file(
     else:
         # For markdown files, use existing processing
         title_match = re.search(r'^#\s+(.+)$', file_content, re.MULTILINE)
-        title = title_match.group(1) if title_match else file.filename.replace('.md', '').replace('_', ' ').title()
+        raw_title = title_match.group(1) if title_match else file.filename.replace('.md', '').replace('_', ' ').title()
+        title = clean_title_text(raw_title)
         
         # Process markdown content
         html_content, featured_image = process_markdown_to_html(file_content)
