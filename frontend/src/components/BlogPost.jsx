@@ -353,7 +353,7 @@ const BlogPost = () => {
                     </div>
                     <CardTitle className="text-lg leading-tight hover:text-orange-600 transition-colors">
                       <Link to={`/${relatedPost.slug}`} target="_blank" rel="noopener noreferrer">
-                        {relatedPost.title}
+                        {decodeHtmlEntities(relatedPost.title)}
                       </Link>
                     </CardTitle>
                   </CardHeader>
