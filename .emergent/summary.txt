@@ -1,22 +1,29 @@
 <analysis>
-The previous AI engineer successfully transitioned the How to Bangalore application from an AI-generated content model to one powered by user-provided markdown articles. Initial work involved processing 5 user markdown files into  and . The engineer then proceeded to integrate this new data into the React frontend, updating , , , and  to consume the flat data structure. Visual confirmation via screenshots showed the homepage and individual blog posts loading correctly, displaying featured images and the Table of Contents. However, the user identified a critical issue: the HTML formatting within the articles was not preserved. The engineer diagnosed this, finding that the processed HTML content was incorrectly wrapped in markdown code block syntax ( and ) within the JSON data, and was in the process of rectifying this.
+The previous AI engineer successfully transformed the How to Bangalore application from static, AI-generated content to a dynamic, user-managed platform. Initially, the engineer fixed a critical HTML formatting issue within user-provided markdown articles, ensuring proper display. Subsequently, a comprehensive admin system was built from scratch, featuring JWT-based authentication, an article upload utility for both Markdown and HTML files, and in-browser rich text editing. Key enhancements included making subcategories optional, ensuring all external links open in new tabs, restricting admin registration to a specific email, and significantly improving article readability through extensive UI/UX styling. The final task addressed a ReactQuill compatibility error by migrating to TinyMCE for the rich text editor, and integrating a user-provided TinyMCE API key.
 </analysis>
 
 <product_requirements>
-The How to Bangalore application is a full-stack blog delivering comprehensive, deeply researched articles about Bangalore. It features a React frontend, FastAPI backend, and MongoDB database. Articles must be 2000-3000 words, provide insider knowledge, be SEO-ready with H1-H3 markups and short paragraphs, and include locally stored featured images. UI/UX requirements include proper header alignment, no dark overlay on post pages, and a sticky Table of Contents (TOC) positioned on the right. The application has transitioned from AI-generated content to user-provided, human-curated markdown files, with the first 5 of an expected 50 files already processed and integrated into the frontend.
+The How to Bangalore application is a full-stack blog designed to provide comprehensive articles about Bangalore. Key requirements include articles being 2000-3000 words, offering insider knowledge, being SEO-ready with proper HTML structure (H1-H3, short paragraphs), and including locally stored featured images. UI/UX demands proper header alignment, no dark overlay on post pages, and a sticky Table of Contents on the right. The application transitioned from AI-generated to user-provided markdown content.
+The previous engineer processed the first 5 of 50 expected user markdown files, converting them into structured JSON and JS mock data. Subsequent user requests included:
+1. An admin utility for uploading markdown and HTML articles, with SEO-friendly URLs.
+2. Ability to clear all current articles.
+3. A secure admin login facility (not for normal users), with credentials set from the UI, not hardcoded.
+4. Subcategories should be optional.
+5. All links in articles should open in new tabs.
+6. Admin registration should be restricted to .
+7. An in-browser rich text editor to edit articles (change text, add/remove photos, edit paragraphs) from the UI.
+8. Fix garbage text like  in article titles.
+9. Ensure the article edit button opens in a new tab.
+10. Integrate a TinyMCE API key.
 </product_requirements>
 
 <key_technical_concepts>
 -   **Full-stack Architecture**: React (frontend), FastAPI (backend), MongoDB (database).
--   **Styling & UI**: Tailwind CSS, Shadcn UI.
--   **Content Generation**: Google Gemini 2.5 Pro (initial phase),  Python library for user content processing.
--   **Data Management**: Mock data files (, ).
--   **API Communication**:  (frontend), FastAPI with  prefix (backend).
--   **Environment**:  variables, backend                          RUNNING   pid 46, uptime 0:00:03
-code-server                      RUNNING   pid 48, uptime 0:00:03
-frontend                         STOPPING  
-mongodb                          RUNNING   pid 54, uptime 0:00:03
-supervisor> .
+-   **Styling & UI**: Tailwind CSS, Shadcn UI, custom CSS for typography.
+-   **Authentication**: JWT (PyJWT), bcrypt for password hashing.
+-   **Content Processing**: Python  library,  for HTML entities.
+-   **Rich Text Editor**: TinyMCE (replaced ReactQuill).
+-   **Data Management**: API-driven content, removal of static mock data.
 </key_technical_concepts>
 
 <code_architecture>
@@ -29,48 +36,69 @@ The application uses a standard full-stack React, FastAPI, MongoDB architecture.
 **Key Files and Their Importance:**
 
 -   :
-    -   **Summary**: The primary React entry point, handling routing for various pages like Home, Category, BlogPost, and SearchResults. It integrates  and .
-    -   **Changes Made**: Updated to manage routing and content display using the newly integrated  data.
--    (and successors like ):
-    -   **Summary**: Previous sources for mock article content, initially AI-generated.
-    -   **Changes Made**: Now largely superseded by  and  for content.
+    -   **Summary**: The FastAPI backend entry point. Initially handled basic API routes.
+    -   **Changes Made**: Significantly refactored to include JWT-based admin authentication, user registration (restricted to specific email), article management (CRUD operations for Markdown/HTML), and file upload endpoints.  function was added to decode HTML entities in titles. Logic for making subcategory optional, clearing articles, and handling HTML/Markdown uploads was integrated.
 -   :
-    -   **Summary**: The main homepage component, displaying a list of articles.
-    -   **Changes Made**: Examined by the AI engineer to understand current data usage; implicitly updated to consume the new  data.
+    -   **Summary**: The primary React entry point, handling routing.
+    -   **Changes Made**: Updated to integrate  for authentication, added routes for  and , and conditionally rendered  and  based on admin status. Removed reliance on static .
 -   :
-    -   **Summary**: Responsible for rendering individual blog posts, including content, featured images, and the Table of Contents.
-    -   **Changes Made**: Significantly updated to work with the flat  data structure, properly display base64 featured images, and integrate the  component. Further adjustments were made for data loading.
+    -   **Summary**: Displays a list of articles on the homepage.
+    -   **Changes Made**: Modified to fetch articles from the backend API instead of local mock data. Includes  for clean titles and  for links.
+-   :
+    -   **Summary**: Renders individual blog posts.
+    -   **Changes Made**: Updated to fetch articles via API using slugs, decode HTML entities in titles, ensure base64 featured images display, and integrate . All internal links now open in new tabs. Extensive styling improvements applied for readability.
 -   :
     -   **Summary**: Displays articles filtered by category.
-    -   **Changes Made**: Modified to adapt to the new flat data structure of  instead of the old nested category structure.
+    -   **Changes Made**: Modified to fetch articles from the API, remove dependency on static , decode HTML entities, and ensure all links open in new tabs.
 -   :
-    -   **Summary**: Handles displaying search results based on user queries.
-    -   **Changes Made**: Updated to correctly search and display articles from the new flat  data structure.
+    -   **Summary**: Handles displaying search results.
+    -   **Changes Made**: Updated to fetch search results from the API, remove dependency on static , decode HTML entities, and ensure all links open in new tabs. Involved significant refactoring due to previous errors.
 -   :
-    -   **Summary**: A new Python script created to automate the ingestion and processing of user-provided markdown articles ( files). It converts them into structured JSON and JavaScript mock data files for the frontend.
-    -   **Changes Made**: Created and used to generate  and  from the initial 5 markdown files.
--    (NEW) and  (NEW):
-    -   **Summary**: These new files contain the structured content derived from the 5 user-provided markdown articles, including base64 encoded featured images and HTML content. They are now the primary content source for the frontend.
-    -   **Changes Made**: Dynamically generated by . The  field within these files was found to be incorrectly wrapped in markdown code blocks.
+    -   **Summary**: Script for processing user markdown files into structured data.
+    -   **Changes Made**: Modified to prevent HTML content from being wrapped in markdown code block delimiters, as this was causing rendering issues. Primarily used in the initial phase and now superseded by the backend API.
+-    (NEW):
+    -   **Summary**: Handles admin login and registration forms.
+    -   **Changes Made**: Created to manage JWT authentication, integrate with backend API, display setup/login forms, and enforce email restriction for registration.
+-    (NEW):
+    -   **Summary**: The main admin interface for article management.
+    -   **Changes Made**: Created to display article statistics, list articles, provide upload functionality, and integrate Edit buttons that link to the . It also utilizes the  function for titles, and edit links open in new tabs.
+-    (NEW):
+    -   **Summary**: Provides an in-browser rich text editor for articles.
+    -   **Changes Made**: Initially implemented with , but later completely rewritten to use  (TinyMCE) due to compatibility issues. It supports WYSIWYG editing, image uploads (base64), text formatting, live preview, and integrates with backend update endpoints.
+-    (NEW):
+    -   **Summary**: React Context for managing authentication state across the frontend.
+    -   **Changes Made**: Created to store and provide authentication tokens and user information, allowing protected routes and conditional rendering.
+-    (OLD) and  (OLD):
+    -   **Summary**: Previously the primary content sources generated from user markdown.
+    -   **Changes Made**: These files were removed as the application transitioned to fetching data dynamically from the backend API.
+-    (OLD):
+    -   **Summary**: A temporary script created to clean the initial  data.
+    -   **Changes Made**: Created and used once to fix the code block wrapper issue, then removed.
 </code_architecture>
 
 <pending_tasks>
--   Integrate the remaining 45 user-provided markdown articles into the application.
--   Ensure that all images within the provided markdown articles are stored locally and properly handled for display.
--   Fix the HTML formatting issue where content is wrapped in markdown code block wrappers in  and , preventing proper rendering on the frontend.
+-   Integrate the remaining 45 user-provided markdown articles into the application. (This is now handled by the admin upload feature, but implies bulk upload might still be a future consideration or a task for the user via the UI).
+-   Ensure that all images within the provided markdown articles are stored locally and properly handled for display. (Partially addressed by base64 image support in editor, but initial markdown processing might need review for bulk images.)
 </pending_tasks>
 
 <current_work>
-The immediate preceding work involved the successful processing and frontend integration of the first 5 user-provided markdown articles. The  script was used to convert these markdown files ( through ) into structured JSON () and JavaScript mock data ().
+The immediate preceding work focused on addressing two critical user feedback points and integrating a premium editor feature:
+1.  **Fixing HTML Entity Encoding**: The user reported garbage text like  in article titles. The AI engineer implemented a  function in the backend () using  to properly decode HTML entities and applied it to various article creation/update endpoints. On the frontend, a  helper function was created and integrated into all relevant components (, , , , ) to ensure titles are displayed correctly.
+2.  **Edit Button Opens in New Tab**: The user requested that the article edit buttons in the admin dashboard open in a new tab. This was implemented by adding  attributes to the edit links in .
+3.  **TinyMCE API Key Integration**: The user provided a TinyMCE API key (). The engineer successfully integrated this key into the  component to enable premium features and remove branding.
 
-Following this, the frontend components were updated to consume this new data:
--    was adjusted to handle the new data flow.
--    was modified multiple times to correctly render the flat data structure, display base64 encoded featured images, and integrate the Table of Contents component.
--    and  were updated to correctly filter and display articles based on the new flat article structure.
-
-After these integrations, initial screenshots confirmed the homepage and individual blog posts were loading and displaying content, featured images, and a functional Table of Contents. However, the user provided feedback that the HTML is not preserved - the formatting is completely off. Upon investigation, the previous engineer discovered that the HTML content within  was incorrectly wrapped with markdown code block delimiters ( at the start and  at the end). The trajectory ends with the engineer identifying this issue and stating the intention to fix it.
+Before these fixes, the system had already undergone significant development:
+-   Initial HTML formatting issues in  were resolved.
+-   A complete admin system with JWT authentication was implemented, restricting registration to .
+-   Articles are now fetched from the backend API, replacing static mock data.
+-   An in-browser rich text editor (TinyMCE) was successfully integrated for article editing (replacing a problematic ReactQuill setup).
+-   HTML and Markdown file uploads are supported via the admin dashboard.
+-   Subcategories in the upload form are now optional.
+-   All article links across the public-facing site open in new tabs.
+-   Significant improvements were made to article readability, typography, and Table of Contents styling.
+The current state is that all these features and fixes have been implemented and tested (backend and frontend), and the TinyMCE API key has just been integrated. The last action was restarting the frontend service after adding the TinyMCE API key.
 </current_work>
 
 <optional_next_step>
-Fix the HTML rendering issue by stripping the markdown code block wrappers from the content in  and .
+Restart the frontend to apply the TinyMCE API key changes and then verify the editor functionality.
 </optional_next_step>
