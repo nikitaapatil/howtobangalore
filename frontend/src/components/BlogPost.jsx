@@ -201,7 +201,7 @@ const BlogPost = () => {
                 {/* Article Header */}
                 <header className="mb-10 pb-8 border-b border-gray-200">
                   <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-                    {displayPost.title}
+                    {decodeHtmlEntities(displayPost.title)}
                   </h1>
                   
                   <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
