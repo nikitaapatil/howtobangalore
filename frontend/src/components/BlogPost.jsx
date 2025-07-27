@@ -80,6 +80,18 @@ const BlogPost = () => {
     fetchPost();
   }, [identifier]);
 
+  // Close share menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showShareMenu && !event.target.closest('.share-menu-container')) {
+        setShowShareMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showShareMenu]);
+
   const fetchPost = async () => {
     if (!identifier) {
       setError('No article identifier provided');
