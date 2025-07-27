@@ -1821,6 +1821,19 @@ This is a test to ensure the old markdown upload endpoint still works.
         self.test_password_change_same_password()
         self.test_password_change_no_authentication()
         self.test_password_change_invalid_token()
+
+        print("\n" + "="*50)
+        print("GOOGLE ANALYTICS CONFIGURATION TESTING")
+        print("="*50)
+        
+        # Test Google Analytics configuration functionality
+        self.test_analytics_config_get_empty()
+        self.test_analytics_config_save_valid()
+        self.test_analytics_config_get_saved()
+        self.test_analytics_config_update_partial()
+        self.test_analytics_config_no_authentication()
+        self.test_analytics_config_invalid_token()
+        self.test_analytics_config_data_persistence()
         
         print("\n" + "="*50)
         print("ARTICLE MANAGEMENT SYSTEM TESTING")
