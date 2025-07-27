@@ -347,17 +347,17 @@ const BlogPost = () => {
                 />
 
                 {/* Article Footer */}
-                <footer className="mt-16 pt-8 border-t border-gray-200">
-                  <div className="flex items-center justify-between">
+                <footer className="mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-8 border-t border-gray-200">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
                     <div className="text-sm text-gray-500">
                       <p>Published on {displayPost.publishDate}</p>
                       <p className="mt-1">Part of <span className="capitalize font-medium text-gray-700">{displayPost.category}</span> guides</p>
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="hover:bg-orange-50 hover:border-orange-200"
+                        className="w-full sm:w-auto hover:bg-orange-50 hover:border-orange-200"
                         onClick={handleShare}
                       >
                         <Share2 className="h-4 w-4 mr-2" />
