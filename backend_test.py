@@ -1174,6 +1174,274 @@ This is a test to ensure the old markdown upload endpoint still works.
         except requests.exceptions.RequestException as e:
             self.log_test("Featured Articles API", False, f"Request failed: {str(e)}")
             return False
+
+    def test_password_change_valid(self):
+        """Test password change with valid data"""
+        if not self.real_admin_token:
+            self.log_test("Password Change (Valid)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Valid password change data
+            password_change_data = {
+                "current_password": "testing123",
+                "new_password": "NewSecurePass123",
+                "confirm_password": "NewSecurePass123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data and 'successfully' in data['message'].lower():
+                    # Change password back to original for other tests
+                    revert_data = {
+                        "current_password": "NewSecurePass123",
+                        "new_password": "testing123",
+                        "confirm_password": "testing123"
+                    }
+                    requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                json=revert_data, headers=headers, timeout=10)
+                    
+                    self.log_test("Password Change (Valid)", True, "Successfully changed password with valid data")
+                    return True
+                else:
+                    self.log_test("Password Change (Valid)", False, f"Unexpected response message: {data}")
+                    return False
+            else:
+                self.log_test("Password Change (Valid)", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Valid)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_wrong_current_password(self):
+        """Test password change with wrong current password"""
+        if not self.real_admin_token:
+            self.log_test("Password Change (Wrong Current)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Wrong current password
+            password_change_data = {
+                "current_password": "wrongpassword123",
+                "new_password": "NewSecurePass123",
+                "confirm_password": "NewSecurePass123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 400:
+                data = response.json()
+                if 'detail' in data and 'current password' in data['detail'].lower():
+                    self.log_test("Password Change (Wrong Current)", True, "Correctly rejected wrong current password")
+                    return True
+                else:
+                    self.log_test("Password Change (Wrong Current)", False, f"Wrong error message: {data}")
+                    return False
+            else:
+                self.log_test("Password Change (Wrong Current)", False, f"Expected 400 error, got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Wrong Current)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_weak_password(self):
+        """Test password change with weak password"""
+        if not self.real_admin_token:
+            self.log_test("Password Change (Weak Password)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Test various weak passwords
+            weak_passwords = [
+                "123",  # Too short
+                "password",  # No numbers
+                "12345678",  # No letters
+                "Pass123"  # Less than 8 characters
+            ]
+            
+            for weak_password in weak_passwords:
+                password_change_data = {
+                    "current_password": "testing123",
+                    "new_password": weak_password,
+                    "confirm_password": weak_password
+                }
+                
+                response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                       json=password_change_data, 
+                                       headers=headers,
+                                       timeout=10)
+                
+                if response.status_code != 400:
+                    self.log_test("Password Change (Weak Password)", False, f"Weak password '{weak_password}' was accepted")
+                    return False
+            
+            self.log_test("Password Change (Weak Password)", True, "Correctly rejected all weak passwords")
+            return True
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Weak Password)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_mismatch_confirmation(self):
+        """Test password change with mismatched confirmation"""
+        if not self.real_admin_token:
+            self.log_test("Password Change (Mismatch Confirmation)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Mismatched passwords
+            password_change_data = {
+                "current_password": "testing123",
+                "new_password": "NewSecurePass123",
+                "confirm_password": "DifferentPassword123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 400:
+                data = response.json()
+                if 'detail' in data and ('match' in data['detail'].lower() or 'confirmation' in data['detail'].lower()):
+                    self.log_test("Password Change (Mismatch Confirmation)", True, "Correctly rejected mismatched password confirmation")
+                    return True
+                else:
+                    self.log_test("Password Change (Mismatch Confirmation)", False, f"Wrong error message: {data}")
+                    return False
+            else:
+                self.log_test("Password Change (Mismatch Confirmation)", False, f"Expected 400 error, got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Mismatch Confirmation)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_same_password(self):
+        """Test password change with same password as current"""
+        if not self.real_admin_token:
+            self.log_test("Password Change (Same Password)", False, "No real admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.real_admin_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Same password as current
+            password_change_data = {
+                "current_password": "testing123",
+                "new_password": "testing123",
+                "confirm_password": "testing123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 400:
+                data = response.json()
+                if 'detail' in data and ('different' in data['detail'].lower() or 'same' in data['detail'].lower()):
+                    self.log_test("Password Change (Same Password)", True, "Correctly rejected same password as current")
+                    return True
+                else:
+                    self.log_test("Password Change (Same Password)", False, f"Wrong error message: {data}")
+                    return False
+            else:
+                self.log_test("Password Change (Same Password)", False, f"Expected 400 error, got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Same Password)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_no_authentication(self):
+        """Test password change without authentication"""
+        try:
+            # No authorization header
+            password_change_data = {
+                "current_password": "testing123",
+                "new_password": "NewSecurePass123",
+                "confirm_password": "NewSecurePass123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers={"Content-Type": "application/json"},
+                                   timeout=10)
+            
+            if response.status_code == 401:
+                self.log_test("Password Change (No Auth)", True, "Correctly rejected request without authentication")
+                return True
+            else:
+                self.log_test("Password Change (No Auth)", False, f"Expected 401 error, got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (No Auth)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_password_change_invalid_token(self):
+        """Test password change with invalid token"""
+        try:
+            headers = {
+                "Authorization": "Bearer invalid_token_12345",
+                "Content-Type": "application/json"
+            }
+            
+            password_change_data = {
+                "current_password": "testing123",
+                "new_password": "NewSecurePass123",
+                "confirm_password": "NewSecurePass123"
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/change-password", 
+                                   json=password_change_data, 
+                                   headers=headers,
+                                   timeout=10)
+            
+            if response.status_code == 401:
+                self.log_test("Password Change (Invalid Token)", True, "Correctly rejected request with invalid token")
+                return True
+            else:
+                self.log_test("Password Change (Invalid Token)", False, f"Expected 401 error, got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Password Change (Invalid Token)", False, f"Request failed: {str(e)}")
+            return False
     
     def cleanup_test_admin(self):
         """Clean up test admin user (if possible)"""
