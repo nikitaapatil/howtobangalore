@@ -232,6 +232,7 @@ function AppContent() {
           {/* Public Routes */}
           <Route path="/*" element={
             <>
+              <ScrollToTop />
               <Header />
               <main className="flex-1">
                 <Routes>
