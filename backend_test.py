@@ -32,6 +32,7 @@ class AdminArticleSystemTester:
         self.test_results = []
         self.failed_tests = []
         self.admin_token = None
+        self.real_admin_token = None
         self.test_admin_username = "admin_bangalore_test"
         self.test_admin_email = "admin@howtobangalore.com"
         self.test_admin_password = "SecureBangaloreAdmin2024!"
