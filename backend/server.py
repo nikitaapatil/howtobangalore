@@ -434,6 +434,51 @@ async def change_admin_password(
     
     return {"message": "Password changed successfully"}
 
+@api_router.get("/admin/analytics-config")
+async def get_analytics_config(current_user: AdminUser = Depends(get_current_user)):
+    """Get analytics configuration"""
+    config = await db.analytics_config.find_one({"admin_email": current_user.email})
+    if not config:
+        # Return default empty config
+        return {
+            "googleAnalyticsId": "",
+            "googleSearchConsoleId": "",
+            "googleAdsId": "",
+            "googleTagManagerId": ""
+        }
+    return {
+        "googleAnalyticsId": config.get("googleAnalyticsId", ""),
+        "googleSearchConsoleId": config.get("googleSearchConsoleId", ""),
+        "googleAdsId": config.get("googleAdsId", ""),
+        "googleTagManagerId": config.get("googleTagManagerId", "")
+    }
+
+@api_router.post("/admin/analytics-config")
+async def save_analytics_config(
+    config: AnalyticsConfig,
+    current_user: AdminUser = Depends(get_current_user)
+):
+    """Save analytics configuration"""
+    config_data = {
+        "admin_email": current_user.email,
+        "googleAnalyticsId": config.googleAnalyticsId,
+        "googleSearchConsoleId": config.googleSearchConsoleId,
+        "googleAdsId": config.googleAdsId,
+        "googleTagManagerId": config.googleTagManagerId,
+        "updated_at": datetime.utcnow()
+    }
+    
+    # Update or insert configuration
+    await db.analytics_config.update_one(
+        {"admin_email": current_user.email},
+        {"$set": config_data},
+        upsert=True
+    )
+    
+    logger.info(f"Analytics config updated for admin: {current_user.email}")
+    
+    return {"message": "Analytics configuration saved successfully"}
+
 # Article routes
 @api_router.post("/admin/articles", response_model=Article)
 async def create_article(
