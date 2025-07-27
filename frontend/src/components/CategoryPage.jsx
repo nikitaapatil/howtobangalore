@@ -260,6 +260,8 @@ const CategoryPage = () => {
                       </div>
                       <Link
                         to={`/${post.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-orange-600 hover:text-orange-700 font-medium flex items-center group"
                       >
                         Read More
