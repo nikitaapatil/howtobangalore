@@ -213,21 +213,33 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 # Auth routes
 @api_router.post("/admin/register", response_model=Token)
 async def register_admin(user_data: AdminUserCreate):
-    # Check if first user (allow registration) or if user already exists
-    existing_users_count = await db.admin_users.count_documents({})
+    # Only allow registration for specific email
+    ALLOWED_ADMIN_EMAIL = "nikitaapatil@gmail.com"
     
-    if existing_users_count > 0:
-        # Check if username/email already exists
-        existing_user = await db.admin_users.find_one({
-            "$or": [
-                {"username": user_data.username},
-                {"email": user_data.email}
-            ]
-        })
-        if existing_user:
+    if user_data.email.lower() != ALLOWED_ADMIN_EMAIL.lower():
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Admin registration is restricted. Only {ALLOWED_ADMIN_EMAIL} is authorized to create an admin account."
+        )
+    
+    # Check if any admin already exists with this email
+    existing_user = await db.admin_users.find_one({
+        "$or": [
+            {"username": user_data.username},
+            {"email": user_data.email}
+        ]
+    })
+    
+    if existing_user:
+        if existing_user["email"] == user_data.email:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Username or email already exists"
+                detail="An admin account with this email already exists. Please login instead."
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already exists"
             )
     
     # Create new admin user
