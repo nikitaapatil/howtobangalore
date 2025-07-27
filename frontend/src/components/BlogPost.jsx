@@ -24,6 +24,63 @@ const BlogPost = () => {
     return textarea.value;
   };
 
+  // Share functionality
+  const handleShare = async () => {
+    const shareData = {
+      title: displayPost?.title || 'How to Bangalore Article',
+      text: displayPost?.excerpt || 'Check out this helpful guide about Bangalore!',
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy URL to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        setShowShareSuccess(true);
+        setTimeout(() => setShowShareSuccess(false), 2000);
+      }
+    } catch (error) {
+      // If all else fails, fallback to copying URL
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setShowShareSuccess(true);
+        setTimeout(() => setShowShareSuccess(false), 2000);
+      } catch (clipboardError) {
+        console.error('Share failed:', error);
+        alert('Unable to share. You can copy the URL from your browser address bar.');
+      }
+    }
+  };
+
+  // Bookmark functionality
+  const handleBookmark = () => {
+    const bookmarkKey = `bookmark_${identifier}`;
+    const bookmarks = JSON.parse(localStorage.getItem('how_to_bangalore_bookmarks') || '[]');
+    
+    if (isBookmarked) {
+      // Remove bookmark
+      const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== identifier);
+      localStorage.setItem('how_to_bangalore_bookmarks', JSON.stringify(updatedBookmarks));
+      setIsBookmarked(false);
+    } else {
+      // Add bookmark
+      const bookmarkData = {
+        id: identifier,
+        title: displayPost?.title,
+        slug: displayPost?.slug,
+        excerpt: displayPost?.excerpt,
+        publishDate: displayPost?.publishDate,
+        url: window.location.href,
+        bookmarkedAt: new Date().toISOString()
+      };
+      bookmarks.push(bookmarkData);
+      localStorage.setItem('how_to_bangalore_bookmarks', JSON.stringify(bookmarks));
+      setIsBookmarked(true);
+    }
+  };
+
   // Get the identifier (either slug from URL path or postId from params)
   const identifier = slug || postId;
 
