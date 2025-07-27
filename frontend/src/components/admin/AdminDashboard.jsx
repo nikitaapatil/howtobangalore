@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import PasswordChange from './PasswordChange';
+import AnalyticsManager from './AnalyticsManager';
 import { 
   FileText, 
   Plus, 
