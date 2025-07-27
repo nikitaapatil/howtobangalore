@@ -112,6 +112,13 @@ const AdminAuth = () => {
             Welcome! Create your admin account to manage articles.
           </p>
         )}
+        {!isLogin && !isFirstUser && (
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800 text-center">
+              <strong>Note:</strong> Admin registration is restricted to authorized users only.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
