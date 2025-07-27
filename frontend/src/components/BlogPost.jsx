@@ -225,19 +225,19 @@ const BlogPost = () => {
             </div>
 
             {/* Article Content */}
-            <div className="bg-white rounded-lg shadow-sm mb-12">
-              <div className="max-w-4xl mx-auto px-8 py-12">
+            <div className="bg-white rounded-lg shadow-sm mb-8 lg:mb-12">
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
                 {/* Article Header */}
-                <header className="mb-10 pb-8 border-b border-gray-200">
-                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                <header className="mb-8 lg:mb-10 pb-6 lg:pb-8 border-b border-gray-200">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight mb-4 lg:mb-6">
                     {decodeHtmlEntities(displayPost.title)}
                   </h1>
                   
-                  <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
+                  <p className="text-lg sm:text-xl text-gray-600 leading-relaxed mb-6 lg:mb-8 font-medium">
                     {displayPost.excerpt}
                   </p>
                   
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 sm:gap-6 text-sm text-gray-600">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-2 text-orange-500" />
                       <span className="font-medium">{displayPost.publishDate}</span>
@@ -251,7 +251,7 @@ const BlogPost = () => {
                         <span className="font-medium">{displayPost.wordCount.toLocaleString()} words</span>
                       </div>
                     )}
-                    <div className="flex items-center space-x-3 ml-auto relative share-menu-container">
+                    <div className="flex items-center space-x-3 sm:ml-auto relative share-menu-container">
                       <Button 
                         variant="outline" 
                         size="sm" 
