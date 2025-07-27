@@ -370,9 +370,9 @@ const BlogPost = () => {
             </div>
 
             {/* Article Footer */}
-            <div className="bg-white rounded-lg shadow-sm p-8 mb-12">
-              <div className="border-t pt-8">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12">
+              <div className="border-t pt-6 sm:pt-8">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-0">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
                       Found this helpful?
@@ -381,9 +381,10 @@ const BlogPost = () => {
                       Share it with others who might benefit from this guide.
                     </p>
                   </div>
-                  <div className="flex items-center space-x-3 mt-4 md:mt-0">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
                     <Button 
                       variant="outline"
+                      className="w-full sm:w-auto"
                       onClick={handleShare}
                     >
                       <Share2 className="h-4 w-4 mr-2" />
