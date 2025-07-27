@@ -257,13 +257,27 @@ const BlogPost = () => {
                       </div>
                     )}
                     <div className="flex items-center space-x-3 ml-auto">
-                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="hover:bg-orange-50 hover:border-orange-200"
+                        onClick={handleShare}
+                      >
                         <Share2 className="h-4 w-4 mr-2" />
                         Share
                       </Button>
-                      <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:border-orange-200">
-                        <Bookmark className="h-4 w-4 mr-2" />
-                        Save
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className={`hover:border-orange-200 ${
+                          isBookmarked 
+                            ? 'bg-orange-50 text-orange-700 border-orange-200' 
+                            : 'hover:bg-orange-50'
+                        }`}
+                        onClick={handleBookmark}
+                      >
+                        <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
+                        {isBookmarked ? 'Saved' : 'Save'}
                       </Button>
                     </div>
                   </div>
