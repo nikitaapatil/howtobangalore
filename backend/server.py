@@ -397,8 +397,9 @@ async def update_article(
     
     update_data = article_update.dict(exclude_unset=True)
     
-    # If title is updated, regenerate slug
+    # If title is updated, regenerate slug and clean title
     if "title" in update_data:
+        update_data["title"] = clean_title_text(update_data["title"])
         update_data["slug"] = generate_slug(update_data["title"])
     
     # If content is updated, reprocess it
