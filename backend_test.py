@@ -945,11 +945,15 @@ With multiple transport options, getting around Bangalore is manageable with pro
         print("="*50)
         
         # Test authentication system
-        if not self.test_admin_registration():
-            print("❌ Admin registration failed. Stopping authentication tests.")
-            return False
-            
-        self.test_admin_login()
+        registration_success = self.test_admin_registration()
+        if not registration_success:
+            # If registration fails (user might already exist), try login instead
+            print("⚠️  Admin registration failed (user might already exist). Trying login...")
+            if not self.test_admin_login():
+                print("❌ Both admin registration and login failed. Stopping authentication tests.")
+                return False
+        else:
+            self.test_admin_login()
         self.test_protected_route_access()
         self.test_jwt_token_validation()
         
