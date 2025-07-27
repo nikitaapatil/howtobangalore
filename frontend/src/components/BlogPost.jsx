@@ -4,36 +4,67 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, ArrowRight } from 'lucide
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-// Try to import user articles first, fallback to enhanced mock
-import userArticles from '../data/user_articles.json';
-import { allPosts as oldAllPosts, categories } from '../data/updated_enhanced_mock';
-
-// Use user articles if available, otherwise fallback to old data
-const allPosts = userArticles && userArticles.length > 0 ? userArticles : oldAllPosts;
 import TableOfContents from './TableOfContents';
 
 const BlogPost = () => {
-  const { postId } = useParams();
+  const { postId, slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+  // Get the identifier (either slug from URL path or postId from params)
+  const identifier = slug || postId;
 
   useEffect(() => {
-    // Find the post in the data
-    const foundPost = allPosts.find(p => p.id === parseInt(postId));
-    if (foundPost) {
-      // Clean up content by removing markdown code block wrappers
-      let cleanContent = foundPost.content;
-      if (cleanContent.startsWith('```html\n')) {
-        cleanContent = cleanContent.replace(/^```html\n/, '').replace(/\n```$/, '');
-      }
-      
-      setPost({
-        ...foundPost,
-        content: cleanContent
-      });
+    fetchPost();
+  }, [identifier]);
+
+  const fetchPost = async () => {
+    if (!identifier) {
+      setError('No article identifier provided');
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  }, [postId]);
+
+    try {
+      // First try to fetch by slug (for new URL structure)
+      let response = await fetch(`${API_BASE_URL}/api/articles/${identifier}`);
+      
+      // If slug fails and identifier looks like a number, try the old ID-based approach
+      if (!response.ok && !isNaN(identifier)) {
+        // For backward compatibility, fetch all articles and find by ID
+        response = await fetch(`${API_BASE_URL}/api/articles`);
+        if (response.ok) {
+          const articles = await response.json();
+          const foundPost = articles.find(p => p.id === identifier || p.id === parseInt(identifier));
+          if (foundPost) {
+            setPost(foundPost);
+            setLoading(false);
+            return;
+          }
+        }
+        setError('Article not found');
+        setLoading(false);
+        return;
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        setPost(data);
+      } else if (response.status === 404) {
+        setError('Article not found');
+      } else {
+        setError('Failed to load article');
+      }
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      setError('Network error');
+    } finally {
+      setLoading(false);
+    }
+  };
   
   if (loading) {
     return (
@@ -46,7 +77,7 @@ const BlogPost = () => {
     );
   }
 
-  if (!post) {
+  if (error || !post) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
