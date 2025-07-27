@@ -456,10 +456,81 @@ With proper planning and research, finding suitable accommodation in Bangalore b
             self.log_test("Article Update", False, f"Request failed: {str(e)}")
             return False
     
-    def test_markdown_file_upload(self):
-        """Test markdown file upload functionality"""
+    def test_html_file_upload(self):
+        """Test HTML file upload functionality with the new unified endpoint"""
         if not self.admin_token:
-            self.log_test("Markdown File Upload", False, "No admin token available for testing")
+            self.log_test("HTML File Upload", False, "No admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.admin_token}"
+            }
+            
+            # Read the test HTML file
+            with open('/app/test_html_article.html', 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Create file-like object for HTML upload
+            files = {
+                'file': ('internet_broadband_guide.html', io.StringIO(html_content), 'text/html')
+            }
+            
+            data = {
+                'category': 'Utilities & Home Services',
+                'subcategory': 'Internet & Broadband',
+                'featured': True
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
+                                   files=files,
+                                   data=data,
+                                   headers=headers,
+                                   timeout=15)
+            
+            if response.status_code == 200:
+                article_data = response.json()
+                required_fields = ['id', 'title', 'slug', 'content', 'category']
+                
+                if all(field in article_data for field in required_fields):
+                    # Verify title extraction from HTML
+                    expected_title = "Complete Guide to Internet and Broadband in Bangalore"
+                    if article_data['title'] == expected_title:
+                        # Verify HTML content is stored as-is
+                        if '<h1>' in article_data['content'] and '<h2>' in article_data['content']:
+                            # Verify slug generation from HTML title
+                            if 'internet' in article_data['slug'].lower() and 'broadband' in article_data['slug'].lower():
+                                self.created_article_ids.append(article_data['id'])
+                                self.log_test("HTML File Upload", True, f"Successfully uploaded HTML file with title extraction and slug: {article_data['slug']}")
+                                return article_data
+                            else:
+                                self.log_test("HTML File Upload", False, f"Slug generation issue from HTML title: {article_data['slug']}")
+                                return None
+                        else:
+                            self.log_test("HTML File Upload", False, "HTML content not preserved correctly")
+                            return None
+                    else:
+                        self.log_test("HTML File Upload", False, f"Title extraction failed. Expected: {expected_title}, Got: {article_data['title']}")
+                        return None
+                else:
+                    missing_fields = [f for f in required_fields if f not in article_data]
+                    self.log_test("HTML File Upload", False, f"Missing required fields: {missing_fields}")
+                    return None
+            else:
+                self.log_test("HTML File Upload", False, f"HTTP {response.status_code}: {response.text}")
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("HTML File Upload", False, f"Request failed: {str(e)}")
+            return None
+        except FileNotFoundError:
+            self.log_test("HTML File Upload", False, "Test HTML file not found at /app/test_html_article.html")
+            return None
+
+    def test_markdown_file_upload_new_endpoint(self):
+        """Test markdown file upload functionality with the new unified endpoint"""
+        if not self.admin_token:
+            self.log_test("Markdown File Upload (New Endpoint)", False, "No admin token available for testing")
             return False
             
         try:
@@ -505,7 +576,7 @@ With multiple transport options, getting around Bangalore is manageable with pro
                 'featured': False
             }
             
-            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-markdown",
+            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
                                    files=files,
                                    data=data,
                                    headers=headers,
@@ -516,23 +587,220 @@ With multiple transport options, getting around Bangalore is manageable with pro
                 required_fields = ['id', 'title', 'slug', 'content', 'category']
                 
                 if all(field in article_data for field in required_fields):
-                    if 'transportation' in article_data['slug'].lower() or 'transport' in article_data['slug'].lower():
-                        self.created_article_ids.append(article_data['id'])
-                        self.log_test("Markdown File Upload", True, f"Successfully uploaded markdown file as article with slug: {article_data['slug']}")
-                        return True
+                    # Verify markdown was converted to HTML
+                    if '<h1>' in article_data['content'] and '<h2>' in article_data['content']:
+                        if 'transportation' in article_data['slug'].lower() or 'transport' in article_data['slug'].lower():
+                            self.created_article_ids.append(article_data['id'])
+                            self.log_test("Markdown File Upload (New Endpoint)", True, f"Successfully uploaded markdown file via new endpoint with slug: {article_data['slug']}")
+                            return True
+                        else:
+                            self.log_test("Markdown File Upload (New Endpoint)", False, "Slug generation issue from markdown file")
+                            return False
                     else:
-                        self.log_test("Markdown File Upload", False, "Slug generation issue from markdown file")
+                        self.log_test("Markdown File Upload (New Endpoint)", False, "Markdown to HTML conversion failed")
                         return False
                 else:
                     missing_fields = [f for f in required_fields if f not in article_data]
-                    self.log_test("Markdown File Upload", False, f"Missing required fields: {missing_fields}")
+                    self.log_test("Markdown File Upload (New Endpoint)", False, f"Missing required fields: {missing_fields}")
                     return False
             else:
-                self.log_test("Markdown File Upload", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Markdown File Upload (New Endpoint)", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except requests.exceptions.RequestException as e:
-            self.log_test("Markdown File Upload", False, f"Request failed: {str(e)}")
+            self.log_test("Markdown File Upload (New Endpoint)", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_file_type_validation(self):
+        """Test file type validation - should reject unsupported file types"""
+        if not self.admin_token:
+            self.log_test("File Type Validation", False, "No admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.admin_token}"
+            }
+            
+            # Try to upload an unsupported file type (txt)
+            txt_content = "This is a plain text file that should be rejected."
+            
+            files = {
+                'file': ('test_file.txt', io.StringIO(txt_content), 'text/plain')
+            }
+            
+            data = {
+                'category': 'Test Category',
+                'subcategory': 'Test Subcategory',
+                'featured': False
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
+                                   files=files,
+                                   data=data,
+                                   headers=headers,
+                                   timeout=15)
+            
+            if response.status_code == 400:
+                error_data = response.json()
+                if 'detail' in error_data and 'markdown' in error_data['detail'].lower() and 'html' in error_data['detail'].lower():
+                    self.log_test("File Type Validation", True, "Correctly rejected unsupported file type (.txt)")
+                    return True
+                else:
+                    self.log_test("File Type Validation", False, f"Wrong error message for unsupported file: {error_data}")
+                    return False
+            else:
+                self.log_test("File Type Validation", False, f"Should have rejected .txt file but got HTTP {response.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("File Type Validation", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_html_content_processing(self):
+        """Test HTML content processing - excerpt extraction, word count, etc."""
+        if not self.admin_token:
+            self.log_test("HTML Content Processing", False, "No admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.admin_token}"
+            }
+            
+            # Create a simple HTML file for testing content processing
+            html_content = """<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML Content Processing Test</title>
+</head>
+<body>
+    <h1>HTML Content Processing Test</h1>
+    <p>This is the first paragraph that should be used for excerpt extraction. It contains enough content to test the excerpt functionality properly.</p>
+    <h2>Second Section</h2>
+    <p>This is another paragraph with more content to test word count calculation and other processing features.</p>
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD" alt="Test Image">
+</body>
+</html>"""
+            
+            files = {
+                'file': ('content_test.html', io.StringIO(html_content), 'text/html')
+            }
+            
+            data = {
+                'category': 'Test Category',
+                'subcategory': 'Content Processing',
+                'featured': False
+            }
+            
+            response = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
+                                   files=files,
+                                   data=data,
+                                   headers=headers,
+                                   timeout=15)
+            
+            if response.status_code == 200:
+                article_data = response.json()
+                
+                # Test excerpt extraction (should strip HTML tags)
+                if article_data.get('excerpt') and 'first paragraph' in article_data['excerpt']:
+                    # Test word count calculation
+                    if article_data.get('word_count') and article_data['word_count'] > 0:
+                        # Test read time calculation
+                        if article_data.get('read_time') and 'min read' in article_data['read_time']:
+                            self.created_article_ids.append(article_data['id'])
+                            self.log_test("HTML Content Processing", True, f"HTML content processing working: excerpt, word count ({article_data['word_count']}), read time ({article_data['read_time']})")
+                            return True
+                        else:
+                            self.log_test("HTML Content Processing", False, f"Read time calculation failed: {article_data.get('read_time')}")
+                            return False
+                    else:
+                        self.log_test("HTML Content Processing", False, f"Word count calculation failed: {article_data.get('word_count')}")
+                        return False
+                else:
+                    self.log_test("HTML Content Processing", False, f"Excerpt extraction failed: {article_data.get('excerpt')}")
+                    return False
+            else:
+                self.log_test("HTML Content Processing", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("HTML Content Processing", False, f"Request failed: {str(e)}")
+            return False
+
+    def test_dual_format_support(self):
+        """Test that both .md and .html files are accepted and processed correctly"""
+        if not self.admin_token:
+            self.log_test("Dual Format Support", False, "No admin token available for testing")
+            return False
+            
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.admin_token}"
+            }
+            
+            # Test 1: Upload HTML file
+            html_content = """<html><head><title>Dual Format Test HTML</title></head><body><h1>HTML Test</h1><p>This is HTML content.</p></body></html>"""
+            
+            files_html = {
+                'file': ('dual_test.html', io.StringIO(html_content), 'text/html')
+            }
+            
+            data_html = {
+                'category': 'Test Category',
+                'subcategory': 'Dual Format',
+                'featured': False
+            }
+            
+            response_html = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
+                                        files=files_html,
+                                        data=data_html,
+                                        headers=headers,
+                                        timeout=15)
+            
+            # Test 2: Upload Markdown file
+            md_content = """# Dual Format Test Markdown\n\nThis is markdown content that should be converted to HTML."""
+            
+            files_md = {
+                'file': ('dual_test.md', io.StringIO(md_content), 'text/markdown')
+            }
+            
+            data_md = {
+                'category': 'Test Category',
+                'subcategory': 'Dual Format',
+                'featured': False
+            }
+            
+            response_md = requests.post(f"{API_BASE_URL}/admin/articles/upload-file",
+                                      files=files_md,
+                                      data=data_md,
+                                      headers=headers,
+                                      timeout=15)
+            
+            # Verify both uploads succeeded
+            if response_html.status_code == 200 and response_md.status_code == 200:
+                html_article = response_html.json()
+                md_article = response_md.json()
+                
+                # Verify HTML file was processed correctly (content preserved as-is)
+                html_preserved = '<h1>HTML Test</h1>' in html_article['content']
+                
+                # Verify Markdown file was converted to HTML
+                md_converted = '<h1>' in md_article['content'] and 'Dual Format Test Markdown' in md_article['content']
+                
+                if html_preserved and md_converted:
+                    self.created_article_ids.extend([html_article['id'], md_article['id']])
+                    self.log_test("Dual Format Support", True, "Both HTML and Markdown files processed correctly with different handling")
+                    return True
+                else:
+                    self.log_test("Dual Format Support", False, f"Content processing failed - HTML preserved: {html_preserved}, MD converted: {md_converted}")
+                    return False
+            else:
+                self.log_test("Dual Format Support", False, f"Upload failed - HTML: {response_html.status_code}, MD: {response_md.status_code}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Dual Format Support", False, f"Request failed: {str(e)}")
             return False
     
     def test_article_deletion(self):
