@@ -239,7 +239,7 @@ const BlogPost = () => {
                         <span className="font-medium">{displayPost.wordCount.toLocaleString()} words</span>
                       </div>
                     )}
-                    <div className="flex items-center space-x-3 ml-auto">
+                    <div className="flex items-center space-x-3 ml-auto relative">
                       <Button 
                         variant="outline" 
                         size="sm" 
@@ -249,19 +249,56 @@ const BlogPost = () => {
                         <Share2 className="h-4 w-4 mr-2" />
                         Share
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className={`hover:border-orange-200 ${
-                          isBookmarked 
-                            ? 'bg-orange-50 text-orange-700 border-orange-200' 
-                            : 'hover:bg-orange-50'
-                        }`}
-                        onClick={handleBookmark}
-                      >
-                        <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
-                        {isBookmarked ? 'Saved' : 'Save'}
-                      </Button>
+                      
+                      {/* Share Menu Dropdown */}
+                      {showShareMenu && (
+                        <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                          <div className="py-2">
+                            <button
+                              onClick={shareToWhatsApp}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-green-500">📱</span>
+                              WhatsApp
+                            </button>
+                            <button
+                              onClick={shareToTwitter}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-blue-400">🐦</span>
+                              Twitter
+                            </button>
+                            <button
+                              onClick={shareToLinkedIn}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-blue-600">💼</span>
+                              LinkedIn
+                            </button>
+                            <button
+                              onClick={shareToEmail}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-gray-600">✉️</span>
+                              Email
+                            </button>
+                            <button
+                              onClick={shareToSMS}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-green-600">💬</span>
+                              SMS
+                            </button>
+                            <button
+                              onClick={copyToClipboard}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <span className="mr-3 text-gray-500">🔗</span>
+                              Copy Link
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </header>
