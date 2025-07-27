@@ -118,11 +118,11 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Featured Image */}
-      {post.featuredImage && (
+      {displayPost.featuredImage && (
         <div className="w-full h-96 bg-gray-200 overflow-hidden relative">
           <img 
-            src={post.featuredImage} 
-            alt={post.title}
+            src={displayPost.featuredImage} 
+            alt={displayPost.title}
             className="w-full h-full object-cover"
           />
         </div>
