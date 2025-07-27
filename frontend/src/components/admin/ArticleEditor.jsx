@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { Editor } from '@tinymce/tinymce-react';
 import { 
   Save, 
   ArrowLeft, 
@@ -13,7 +12,9 @@ import {
   Italic, 
   List, 
   Link as LinkIcon,
-  Loader2
+  Loader2,
+  Type,
+  Edit3
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -24,6 +25,7 @@ const ArticleEditor = () => {
   const { articleId } = useParams();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [article, setArticle] = useState(null);
