@@ -353,12 +353,6 @@ const Home = () => {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               We're working on bringing you comprehensive guides about living in Bangalore. Check back soon!
             </p>
-            <Link
-              to="/admin"
-              className="text-orange-600 hover:text-orange-700 font-medium"
-            >
-              Admin Panel
-            </Link>
           </div>
         </section>
       )}
