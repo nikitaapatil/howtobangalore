@@ -192,6 +192,18 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Share Success Message */}
+      {showShareSuccess && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">
+          <div className="flex items-center">
+            <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Link copied to clipboard!
+          </div>
+        </div>
+      )}
+
       {/* Featured Image */}
       {displayPost.featuredImage && (
         <div className="w-full h-96 bg-gray-200 overflow-hidden relative">
