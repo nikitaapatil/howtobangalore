@@ -151,9 +151,11 @@ def generate_slug(title: str) -> str:
     return slug or 'article'
 
 def extract_excerpt(content: str, max_length: int = 150) -> str:
-    """Extract excerpt from markdown content."""
+    """Extract excerpt from markdown or HTML content."""
+    # Remove HTML tags first
+    clean_text = re.sub(r'<[^>]+>', '', content)
     # Remove markdown formatting
-    clean_text = re.sub(r'[#*_`\[\]()!]', '', content)
+    clean_text = re.sub(r'[#*_`\[\]()!]', '', clean_text)
     clean_text = re.sub(r'\n+', ' ', clean_text)
     clean_text = clean_text.strip()
     
