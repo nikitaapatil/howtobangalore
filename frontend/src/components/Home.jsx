@@ -374,40 +374,6 @@ const Home = () => {
         </section>
       )}
 
-      {/* Statistics Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Trust Our Guides?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our content is comprehensive, well-researched, and based on real experiences of living in Bangalore.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-orange-600 mb-2">{allPosts.length}+</div>
-              <div className="text-lg font-medium text-gray-900 mb-2">Comprehensive Articles</div>
-              <p className="text-gray-600">Detailed guides covering every aspect of Bangalore life</p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-orange-600 mb-2">2000+</div>
-              <div className="text-lg font-medium text-gray-900 mb-2">Words Per Article</div>
-              <p className="text-gray-600">In-depth content with practical tips and insights</p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-orange-600 mb-2">{categories.length}</div>
-              <div className="text-lg font-medium text-gray-900 mb-2">Main Categories</div>
-              <p className="text-gray-600">Organized approach to Bangalore living topics</p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-orange-600 mb-2">100%</div>
-              <div className="text-lg font-medium text-gray-900 mb-2">Practical Focus</div>
-              <p className="text-gray-600">Real-world advice you can implement immediately</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action */}
       <section className="py-16 bg-gradient-to-r from-orange-600 to-amber-600">
