@@ -544,6 +544,63 @@ async def upload_file(
     await db.articles.insert_one(article.dict())
     return article
 
+# Contact form endpoint
+@api_router.post("/contact")
+async def submit_contact_form(form: ContactForm):
+    """Handle contact form submissions and send email to nikitaapatil@gmail.com"""
+    try:
+        # Email configuration (you'll need to set these in your environment)
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        sender_email = "your-email@gmail.com"  # You'll need to set this
+        sender_password = "your-app-password"  # You'll need to set this
+        recipient_email = "nikitaapatil@gmail.com"
+        
+        # Create message
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = recipient_email
+        message["Subject"] = f"Contact Form: {form.subject}"
+        
+        # Email body
+        body = f"""
+        New contact form submission from How to Bangalore:
+        
+        Name: {form.name}
+        Email: {form.email}
+        Subject: {form.subject}
+        
+        Message:
+        {form.message}
+        
+        ---
+        This message was sent from the How to Bangalore contact form.
+        """
+        
+        message.attach(MIMEText(body, "plain"))
+        
+        # For now, just log the contact form submission
+        # In a real implementation, you would configure proper email sending
+        logger.info(f"Contact form submission from {form.name} ({form.email}): {form.subject}")
+        
+        # Store the contact form submission in database
+        contact_submission = {
+            "name": form.name,
+            "email": form.email,
+            "subject": form.subject,
+            "message": form.message,
+            "submitted_at": datetime.utcnow(),
+            "id": str(uuid.uuid4())
+        }
+        
+        await db.contact_submissions.insert_one(contact_submission)
+        
+        return {"message": "Contact form submitted successfully", "success": True}
+        
+    except Exception as e:
+        logger.error(f"Error submitting contact form: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to submit contact form")
+
 # Existing routes
 @api_router.get("/")
 async def root():
