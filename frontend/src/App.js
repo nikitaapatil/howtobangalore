@@ -231,11 +231,11 @@ function AppContent() {
                   <Route path="/:slug" element={<BlogPost />} />
                   <Route path="/search" element={<SearchResults />} />
                   <Route path="/about" element={<AboutPage />} />
-                  <Route path="/contact" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Contact Us</h1><p className="mt-4">Coming soon...</p></div>} />
-                  <Route path="/privacy" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Privacy Policy</h1><p className="mt-4">Coming soon...</p></div>} />
-                  <Route path="/terms" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Terms of Service</h1><p className="mt-4">Coming soon...</p></div>} />
-                  <Route path="/disclaimer" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Disclaimer</h1><p className="mt-4">Coming soon...</p></div>} />
-                  <Route path="/sitemap" element={<div className="py-20 text-center"><h1 className="text-3xl font-bold">Sitemap</h1><p className="mt-4">Coming soon...</p></div>} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/disclaimer" element={<DisclaimerPage />} />
+                  <Route path="/sitemap" element={<SitemapPage />} />
                 </Routes>
               </main>
               <Footer />
